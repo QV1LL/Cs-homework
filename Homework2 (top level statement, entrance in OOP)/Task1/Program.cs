@@ -16,7 +16,7 @@ namespace Task1
             string? number = Console.ReadLine();
 
             Console.WriteLine("Enter current number system (binary, hex, decimal): ");
-            string? currentNumberSystemString = Console.ReadLine();
+            string? currentNumberSystemString = Capitalize(Console.ReadLine());
 
             if (!Enum.TryParse(currentNumberSystemString, out NumberSystem currentNumberSystem))
             {
@@ -24,15 +24,15 @@ namespace Task1
                 return;
             }
 
-            IntDecorator? numberWrapped;
+            NumberDecorator? numberWrapped;
 
             try
             {
                 numberWrapped = currentNumberSystem switch
                 {
-                    NumberSystem.Binary => new BinaryInt(number),
-                    NumberSystem.Hex => new HexInt(number),
-                    NumberSystem.Decimal => new Int(number)
+                    NumberSystem.Binary => new BinaryNumber(number),
+                    NumberSystem.Hex => new HexNumber(number),
+                    NumberSystem.Decimal => new DecimalNumber(number)
                 };
             }
             catch(Exception e)
@@ -42,7 +42,7 @@ namespace Task1
             }
 
             Console.WriteLine("Enter target number system (binary, hex, decimal): ");
-            string? targetNumberSystemString = Console.ReadLine();
+            string? targetNumberSystemString = Capitalize(Console.ReadLine());
 
             if (!Enum.TryParse(targetNumberSystemString, out NumberSystem targetNumberSystem))
             {
@@ -50,14 +50,21 @@ namespace Task1
                 return;
             }
 
-            IntDecorator result = targetNumberSystem switch
+            NumberDecorator result = targetNumberSystem switch
             {
-                NumberSystem.Binary => new BinaryInt(numberWrapped.ToInt()),
-                NumberSystem.Hex => new HexInt(numberWrapped.ToInt()),
-                NumberSystem.Decimal => new Int(numberWrapped.ToInt())
+                NumberSystem.Binary => new BinaryNumber(numberWrapped.ToInt()),
+                NumberSystem.Hex => new HexNumber(numberWrapped.ToInt()),
+                NumberSystem.Decimal => new DecimalNumber(numberWrapped.ToInt())
             };
 
             Console.WriteLine($"Number in {targetNumberSystem.ToString().ToLower()}: {result}");
+        }
+
+        private static string? Capitalize(string? text)
+        {
+            if (text == null) return null;
+
+            return text[0].ToString().ToUpper() + ((text.Length > 1) ? text.Substring(1).ToLower() : string.Empty);
         }
     }
 }

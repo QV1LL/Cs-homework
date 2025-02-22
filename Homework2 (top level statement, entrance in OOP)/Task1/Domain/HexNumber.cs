@@ -2,19 +2,19 @@
 
 namespace Task1.Domain
 {
-    internal class HexInt : IntDecorator
+    internal class HexNumber : NumberDecorator
     {
-        public HexInt(int value) : base(value.ToString("X"))
+        public HexNumber(int value) : base(value.ToString("X"))
         {
 
         }
 
-        public HexInt(string value) : base(value)
+        public HexNumber(string value) : base(value)
         {
 
         }
 
-        public static implicit operator int(HexInt hexInt)
+        public static implicit operator int(HexNumber hexInt)
         {
             string hex = hexInt.Value;
 

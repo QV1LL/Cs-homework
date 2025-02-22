@@ -1,6 +1,6 @@
 ﻿namespace Task1.Domain
 {
-    internal abstract class IntDecorator
+    internal abstract class NumberDecorator
     {
         private readonly string _value;
 
@@ -9,7 +9,7 @@
             get => this._value;
         }
 
-        protected IntDecorator(string value)
+        protected NumberDecorator(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Invalid value");

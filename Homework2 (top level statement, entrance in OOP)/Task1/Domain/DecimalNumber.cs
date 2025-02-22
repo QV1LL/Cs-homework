@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Task1.Domain
 {
-    internal class Int : IntDecorator
+    internal class DecimalNumber : NumberDecorator
     {
-        public Int(int value) : base(value.ToString())
+        public DecimalNumber(int value) : base(value.ToString())
         {
 
         }
 
-        public Int(string value) : base(value)
+        public DecimalNumber(string value) : base(value)
         {
             
         }
