@@ -11,7 +11,8 @@ namespace Task1.Domain
 
         public HexNumber(string value) : base(value)
         {
-
+            if (value.Length > 8)
+                throw new ArgumentOutOfRangeException("Hex value is out of int bounds");
         }
 
         public static implicit operator int(HexNumber hexInt)
