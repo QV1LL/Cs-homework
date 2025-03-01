@@ -14,7 +14,7 @@
             }
         }
 
-        public Vehicle(string title, string description, string soundKey, int workDelay) : base(title, description, soundKey)
+        protected Vehicle(string title, string description, string soundKey, int workDelay) : base(title, description, soundKey)
         {
             WorkDelay = workDelay;
         }

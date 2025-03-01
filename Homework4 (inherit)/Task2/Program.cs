@@ -10,47 +10,46 @@ internal static class Program
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("AppSettings.json")
             .Build();
+
     public static void Main(string[] args)
     {
-        var car = new Car
-        (
-            "Dodge challenger hellcat",
-            "a powerfull american V8",
-            "HellcatEngine",
-            100
-        );
+        Device[] devices = 
+        {
+            new Car
+            (
+                "Dodge challenger hellcat",
+                "a powerfull american V8",
+                "HellcatEngine",
+                100
+            ),
+            new Car
+            (
+                "Nissan Skyline GTR",
+                "japanese legendary",
+                "SkylineEngine",
+                50
+            ),
+            new Steamer
+            (
+                "Liberty",
+                "steamer named liberty, thats all i can say",
+                "Steamer",
+                500
+            ),
+            new MicrowaveOven
+            (
+                "My oven",
+                "just oven",
+                "MicrowaveOven"
+            ),
+            new Kettle
+            (
+                "My kettle",
+                "just kettle",
+                "Kettle"
+            )
 
-        var steamer = new Steamer
-        (
-            "Liberty",
-            "steamer named liberty, thats all i can say",
-            "Steamer",
-            500
-        );
-
-        var oven = new MicrowaveOven
-        (
-            "My oven",
-            "just oven",
-            "MicrowaveOven"
-        );
-
-        var kettle = new Kettle
-        (
-            "My kettle",
-            "just kettle",
-            "Kettle"
-        );
-
-        var anotherOneCar = new Car
-        (
-            "Nissan Skyline GTR",
-            "japanese legendary",
-            "SkylineEngine",
-            50
-        );
-
-        Device[] devices = { car, anotherOneCar, steamer, oven, kettle };
+        };
 
         foreach (Device device in devices)
             TestDevice(device);
