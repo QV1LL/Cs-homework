@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Domain.ValueObjects;
+﻿using LibraryMVC.Domain.Entities.Interfaces;
+using LibraryMVC.Domain.ValueObjects;
 
 namespace LibraryMVC.Domain.Entities;
 

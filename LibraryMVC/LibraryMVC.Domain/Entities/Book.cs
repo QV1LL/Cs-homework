@@ -1,4 +1,6 @@
-﻿namespace LibraryMVC.Domain.Entities;
+﻿using LibraryMVC.Domain.Entities.Interfaces;
+
+namespace LibraryMVC.Domain.Entities;
 
 public class Book : IEntity
 {

@@ -1,4 +1,4 @@
-﻿namespace LibraryMVC.Domain.Entities;
+﻿namespace LibraryMVC.Domain.Entities.Interfaces;
 
 public interface IEntity
 {

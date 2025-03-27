@@ -30,7 +30,7 @@ public class MainMenuView
 
     public void DisplayBook(Book book, Name authorName)
     {
-        Console.WriteLine($"\nTitle: {book.Title},\nAuthor: {authorName}\n");
+        Console.WriteLine($"\n -Title: {book.Title},\n -Author: {authorName}\n");
     }
 
     public string PromptForString(string prompt)

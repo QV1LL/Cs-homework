@@ -1,4 +1,4 @@
-﻿using LibraryMVC.Domain.Entities;
+﻿using LibraryMVC.Domain.Entities.Interfaces;
 using LibraryMVC.Infrastructure.Extensions;
 using System.Collections;
 using System.Reflection;
