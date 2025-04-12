@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="GeologicalFindingAccountingApp.Presentation.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:GeologicalFindingAccountingApp.Presentation.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel Padding="20">
+        <TextBlock
+            Margin="0,0,0,10"
+            FontSize="24"
+            Text="Тема" />
+        <ComboBox
+            x:Name="ThemeComboBox"
+            Width="200"
+            SelectionChanged="ThemeComboBox_SelectionChanged">
+            <ComboBoxItem Content="Звичайна" Tag="Default" />
+            <ComboBoxItem Content="Світла" Tag="Light" />
+            <ComboBoxItem Content="Темна" Tag="Dark" />
+        </ComboBox>
+    </StackPanel>
+</Page>

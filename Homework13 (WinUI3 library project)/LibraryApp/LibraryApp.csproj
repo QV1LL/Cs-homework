@@ -14,8 +14,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="View\AddBookPage.xaml" />
-    <None Remove="View\MainPage.xaml" />
+    <None Remove="Views\AddBookPage.xaml" />
+    <None Remove="Views\MainPage.xaml" />
+    <None Remove="Views\Pages\BooksPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +52,24 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="View\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Windows\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\BooksPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Pages\BooksPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Pages\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
