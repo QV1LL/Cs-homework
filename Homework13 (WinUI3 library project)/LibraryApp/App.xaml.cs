@@ -1,6 +1,8 @@
 ﻿using LibraryApp.Domain;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace LibraryApp;
 
@@ -9,6 +11,7 @@ public partial class App : Application
     internal static List<Book> Books = new();
 
     private Window? m_window;
+    public static Layout CurrentBooksViewLayout = new StackLayout();
     public static Window? MainWindow { get; private set; }
 
     public App()

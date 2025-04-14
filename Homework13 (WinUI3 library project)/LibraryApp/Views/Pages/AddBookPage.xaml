@@ -5,93 +5,62 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodels="using:LibraryApp.ViewModels"
-    d:DataContext="{d:DesignInstance Type=viewmodels:AddBookViewModel}"
+    xmlns:pageviewmodels="using:LibraryApp.ViewModels.PageViewModels"
+    d:DataContext="{d:DesignInstance Type=pageviewmodels:AddBookPageViewModel}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Page.Background>
-        <AcrylicBrush
-            FallbackColor="Black"
-            TintColor="LightGray"
-            TintLuminosityOpacity="0.3"
-            TintOpacity="0.1" />
-    </Page.Background>
+    <StackPanel Spacing="10">
+        <TextBox
+            x:Name="TitleTextBox"
+            HorizontalAlignment="Stretch"
+            PlaceholderText="Введіть назву книги..."
+            Text="{x:Bind ViewModel.Title, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            TextWrapping="Wrap" />
+        <TextBox
+            x:Name="AuthorTextBox"
+            HorizontalAlignment="Stretch"
+            PlaceholderText="Введіть ім'я автора..."
+            Text="{x:Bind ViewModel.Author, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            TextWrapping="Wrap" />
+        <TextBox
+            x:Name="GenreTextBox"
+            HorizontalAlignment="Stretch"
+            PlaceholderText="Введіть жанр книги..."
+            Text="{x:Bind ViewModel.Genre, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            TextWrapping="Wrap" />
+        <Button
+            x:Name="PickFileButton"
+            Margin="0,10,0,0"
+            HorizontalAlignment="Left"
+            Command="{x:Bind ViewModel.PickImageFileCommand}"
+            Content="Вибрати шлях до зображення" />
+        <CheckBox
+            x:Name="IsFacouriteTextBox"
+            HorizontalAlignment="Stretch"
+            IsChecked="{x:Bind ViewModel.IsFavourite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+        <Button
+            x:Name="SaveButton"
+            Width="150"
+            Margin="0,10,0,0"
+            HorizontalAlignment="Right"
+            Command="{x:Bind ViewModel.AddBookCommand}"
+            Content="Зберегти" />
 
-    <Grid>
-        <Rectangle>
-            <Rectangle.Fill>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0.0" Color="Fuchsia" />
-                    <GradientStop Offset="0.5" Color="CornflowerBlue" />
-                    <GradientStop Offset="1.0" Color="LightGoldenrodYellow" />
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-        </Rectangle>
-
-        <Grid Padding="40">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                Margin="0,0,10,10"
-                Style="{StaticResource BaseTextBlockStyle}"
-                Text="Назва книги:" />
-            <TextBox
-                x:Name="TitleTextBox"
-                Grid.Row="0"
-                Grid.Column="1"
-                Margin="0,0,0,10"
-                Style="{StaticResource DefaultTextBoxStyle}"
-                Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="0,0,10,10"
-                Style="{StaticResource BaseTextBlockStyle}"
-                Text="Опис:" />
-            <TextBox
-                x:Name="DescriptionTextBox"
-                Grid.Row="1"
-                Grid.Column="1"
-                Height="100"
-                Margin="0,0,0,10"
-                AcceptsReturn="True"
-                Style="{StaticResource DefaultTextBoxStyle}"
-                Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                TextWrapping="Wrap" />
-
-            <TextBlock
-                Grid.Row="2"
-                Grid.Column="0"
-                Margin="0,0,10,10"
-                Style="{StaticResource BaseTextBlockStyle}"
-                Text="Автор:" />
-            <TextBox
-                x:Name="AuthorTextBox"
-                Grid.Row="2"
-                Grid.Column="1"
-                Margin="0,0,0,10"
-                Style="{StaticResource DefaultTextBoxStyle}"
-                Text="{Binding AuthorName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-
-            <Button
-                x:Name="SaveButton"
-                Grid.Row="3"
-                Grid.Column="1"
-                HorizontalAlignment="Right"
-                Content="Зберегти"
-                Style="{StaticResource DefaultButtonStyle}" />
-        </Grid>
-    </Grid>
+        <ContentDialog
+            x:Name="MessageDialog"
+            Title="Error"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+            CornerRadius="8"
+            DefaultButton="Primary"
+            PrimaryButtonCommand="{x:Bind ViewModel.CloseDialogCommand}"
+            PrimaryButtonText="OK">
+            <StackPanel>
+                <TextBlock
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Text="Invalid arguments passed into the form"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </ContentDialog>
+    </StackPanel>
 </Page>

@@ -31,19 +31,9 @@
             <NavigationViewItem
                 Content="Всі книги"
                 SelectsOnInvoked="True"
-                Tag="AllBooks">
+                Tag="BooksPage">
                 <NavigationViewItem.Icon>
                     <FontIcon Glyph="" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-            <NavigationViewItem Content="Книги за жанрами" Tag="BooksByGenre">
-                <NavigationViewItem.Icon>
-                    <FontIcon Glyph="" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-            <NavigationViewItem Content="Вибрані книги" Tag="FavoriteBooks">
-                <NavigationViewItem.Icon>
-                    <FontIcon Glyph="" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.MenuItems>

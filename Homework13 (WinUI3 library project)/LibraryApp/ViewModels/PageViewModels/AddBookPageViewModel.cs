@@ -1,4 +1,9 @@
-﻿using System;
+﻿using LibraryApp.Commands;
+using LibraryApp.Domain;
+using System;
+using System.Windows.Input;
+using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 
 namespace LibraryApp.ViewModels.PageViewModels;
 
@@ -7,62 +12,68 @@ internal class AddBookPageViewModel : ViewModelBase
     public string Title
     {
         get => field;
-        set
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(Title));
-
-            field = value;
-            OnPropertyChanged(nameof(Title));
-        }
+        set => SetProperty(ref field, value);
     }
-
     public string Author
     {
         get => field;
-        set
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(Author));
-
-            field = value;
-            OnPropertyChanged(nameof(Author));
-        }
+        set => SetProperty(ref field, value);
     }
-
     public string Genre
     {
         get => field;
-        set
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(Genre));
-
-            field = value;
-            OnPropertyChanged(nameof(Genre));
-        }
+        set => SetProperty(ref field, value);
     }
-
-    public string CoverImagePath
+    public bool IsFavourite
     {
         get => field;
-        set
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(CoverImagePath));
-
-            field = value;
-            OnPropertyChanged(nameof(CoverImagePath));
-        }
+        set => SetProperty(ref field, value);
     }
 
-    public bool IsFavorite
+    private string? CoverImagePath { get; set; }
+    
+    public ICommand AddBookCommand { get; }
+    public ICommand PickImageFileCommand { get; }
+    public ICommand CloseDialogCommand { get; }
+
+    public event EventHandler ShowDialogRequested;
+
+    public AddBookPageViewModel()
     {
-        get => field;
-        set
-        {
-            field = value;
-            OnPropertyChanged(nameof(CoverImagePath));
-        }
+        AddBookCommand = new RelayCommand(
+            async (p) =>
+            {
+                try
+                {
+                    var book = new Book(Title, Author, Genre, CoverImagePath, IsFavourite);
+                    App.Books.Add(book);
+                }
+                catch (Exception e)
+                {
+                    ShowDialogRequested?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        );
+
+        PickImageFileCommand = new RelayCommand(
+            async (p) =>
+            {
+                var picker = new FileOpenPicker
+                {
+                    ViewMode = PickerViewMode.Thumbnail,
+                    SuggestedStartLocation = PickerLocationId.PicturesLibrary
+                };
+                picker.FileTypeFilter.Add(".jpg");
+                picker.FileTypeFilter.Add(".jpeg");
+                picker.FileTypeFilter.Add(".png");
+
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+                WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+                var file = await picker.PickSingleFileAsync();
+                if (file != null) CoverImagePath = file.Path;
+            }
+        );
+        CloseDialogCommand = new RelayCommand((p) => { });
     }
 }
