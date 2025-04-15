@@ -11,7 +11,6 @@ public partial class App : Application
     internal static List<Book> Books = new();
 
     private Window? m_window;
-    public static Layout CurrentBooksViewLayout = new StackLayout();
     public static Window? MainWindow { get; private set; }
 
     public App()

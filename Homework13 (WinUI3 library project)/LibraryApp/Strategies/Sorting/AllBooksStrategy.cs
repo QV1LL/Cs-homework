@@ -1,5 +1,4 @@
 ﻿using LibraryApp.ViewModels.EntityViewModels;
-using LibraryApp.ViewModels.PageViewModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,4 +8,5 @@ internal class AllBooksStrategy : ISortingStrategy<BookViewModel>
 {
     public IEnumerable<BookViewModel> Apply(IEnumerable<BookViewModel> books) 
         => books.OrderBy(b => b.Title);
+    public override string ToString() => "All";
 }

@@ -25,6 +25,12 @@
                 ItemsSource="{x:Bind ViewModel.Genres, Mode=OneWay}"
                 PlaceholderText="All Genres"
                 SelectedItem="{x:Bind ViewModel.SelectedGenre, Mode=TwoWay}" />
+            <ComboBox
+                x:Name="SortingComboBox"
+                Width="200"
+                ItemsSource="{x:Bind ViewModel.SortingStrategies, Mode=OneWay}"
+                PlaceholderText="Sort by"
+                SelectedItem="{x:Bind ViewModel.SelectedSortingStrategy, Mode=TwoWay}" />
             <TextBox
                 x:Name="SearchBox"
                 Width="200"
@@ -48,18 +54,28 @@
             <ItemsView.ItemTemplate>
                 <DataTemplate x:DataType="entitiesviewmodels:BookViewModel">
                     <ItemContainer>
-                        <StackPanel Margin="10">
+                        <StackPanel Margin="10" Spacing="10">
                             <Image
                                 Height="150"
+                                HorizontalAlignment="Left"
                                 Source="{x:Bind CoverImage, Mode=OneWay}"
                                 Stretch="UniformToFill" />
                             <TextBlock
                                 Style="{StaticResource SubtitleTextBlockStyle}"
                                 Text="{x:Bind Title, Mode=OneWay}"
                                 TextWrapping="Wrap" />
-                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Author, Mode=OneWay}" />
-                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Genre, Mode=OneWay}" />
-                            <FontIcon Glyph="" Visibility="{x:Bind IsFavourite, Mode=OneWay}" />
+                            <TextBlock
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{x:Bind Author, Mode=OneWay}"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{x:Bind Genre, Mode=OneWay}"
+                                TextWrapping="Wrap" />
+                            <FontIcon
+                                HorizontalAlignment="Left"
+                                Glyph=""
+                                Visibility="{x:Bind IsFavourite, Mode=OneWay}" />
                         </StackPanel>
                     </ItemContainer>
                 </DataTemplate>

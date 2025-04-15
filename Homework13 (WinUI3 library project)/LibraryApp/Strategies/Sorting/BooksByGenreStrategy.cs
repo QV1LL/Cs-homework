@@ -8,4 +8,6 @@ internal class BooksByGenreStrategy : ISortingStrategy<BookViewModel>
 {
     public IEnumerable<BookViewModel> Apply(IEnumerable<BookViewModel> books) 
         => books.OrderBy(b => b.Genre).ThenBy(b => b.Title);
+
+    public override string ToString() => "By genre";
 }

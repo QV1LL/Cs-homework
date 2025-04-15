@@ -11,39 +11,83 @@ namespace LibraryApp.ViewModels.PageViewModels;
 
 internal class BooksPageViewModel : ViewModelBase
 {
-    private bool _isStackLayout = false;
-    private ISortingStrategy<BookViewModel> _sortingStrategy;
+    private bool _isStackLayout = true;
 
-    public IEnumerable<BookViewModel> FilteredBooksViewModels 
-        => _sortingStrategy.Apply(App.Books.Select(b => new BookViewModel(b)));
-    public IEnumerable<string> Genres => App.Books.Select(b => b.Genre);
+    public IEnumerable<BookViewModel> FilteredBooksViewModels
+    {
+        get
+        {
+            var booksViewModel = App.Books
+                .Select(b => new BookViewModel(b))
+                .Where(b => (b.Title.Contains(SearchText ?? "") ||
+                           b.Author.Contains(SearchText ?? "") ||
+                           b.Genre.Contains(SearchText ?? "")) &&
+                           (SelectedGenre == "All" || b.Genre == SelectedGenre));
+
+            return SelectedSortingStrategy.Apply(booksViewModel);
+        }
+    }
+
+    public IEnumerable<string> Genres
+    {
+        get
+        {
+            var books = new List<string>() { "All" };
+            books.AddRange(App.Books.Select(b => b.Genre).ToHashSet());
+
+            return books;
+        }
+    }
+    public IEnumerable<ISortingStrategy<BookViewModel>> SortingStrategies => 
+        new List<ISortingStrategy<BookViewModel>>()
+        {
+            new AllBooksStrategy(),
+            new BooksByGenreStrategy(),
+            new FavoriteBooksStrategy()
+        };
+    public ISortingStrategy<BookViewModel> SelectedSortingStrategy
+    {
+        get => field;
+        set
+        {
+            SetProperty(ref field, value);
+            OnPropertyChanged(nameof(FilteredBooksViewModels));
+        }
+    } = new AllBooksStrategy();
     public string SelectedGenre
     {
         get => field;
-        set => SetProperty(ref field, value);
-    }
+        set
+        {
+            SetProperty(ref field, value);
+            OnPropertyChanged(nameof(FilteredBooksViewModels));
+        }
+    } = "All";
     public string SearchText
     {
         get => field;
-        set => SetProperty(ref field, value);
+        set
+        {
+            SetProperty(ref field, value);
+            OnPropertyChanged(nameof(FilteredBooksViewModels));
+        }
     }
     public Layout CurrentLayout
     {
         get => field;
         set => SetProperty(ref field, value);
-    } = App.CurrentBooksViewLayout;
+    } = new StackLayout();
 
     public ICommand ToggleLayoutCommand { get; }
     public ICommand AddBookCommand { get; }
 
     public BooksPageViewModel()
     {
-        _sortingStrategy = new AllBooksStrategy();
         ToggleLayoutCommand = new RelayCommand(
             (p) =>
             {
                 _isStackLayout = !_isStackLayout;
-                App.CurrentBooksViewLayout = _isStackLayout
+                CurrentLayout = _isStackLayout
                     ? new StackLayout { Orientation = Orientation.Vertical, Spacing = 10 }
                     : new UniformGridLayout
                     {

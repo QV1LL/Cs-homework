@@ -47,6 +47,7 @@ internal class AddBookPageViewModel : ViewModelBase
                 {
                     var book = new Book(Title, Author, Genre, CoverImagePath, IsFavourite);
                     App.Books.Add(book);
+                    MainWindow.MainWindowContentFrame.GoBack();
                 }
                 catch (Exception e)
                 {

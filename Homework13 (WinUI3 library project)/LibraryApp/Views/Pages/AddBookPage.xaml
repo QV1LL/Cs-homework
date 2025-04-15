@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <StackPanel Spacing="10">
+    <StackPanel Margin="10" Spacing="10">
         <TextBox
             x:Name="TitleTextBox"
             HorizontalAlignment="Stretch"
