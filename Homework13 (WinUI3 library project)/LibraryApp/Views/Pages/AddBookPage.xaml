@@ -13,34 +13,41 @@
     <StackPanel Margin="10" Spacing="10">
         <TextBox
             x:Name="TitleTextBox"
+            x:Uid="TitleTextBox"
             HorizontalAlignment="Stretch"
             PlaceholderText="Введіть назву книги..."
             Text="{x:Bind ViewModel.Title, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             TextWrapping="Wrap" />
         <TextBox
             x:Name="AuthorTextBox"
+            x:Uid="AuthorTextBox"
             HorizontalAlignment="Stretch"
             PlaceholderText="Введіть ім'я автора..."
             Text="{x:Bind ViewModel.Author, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             TextWrapping="Wrap" />
         <TextBox
             x:Name="GenreTextBox"
+            x:Uid="GenreTextBox"
             HorizontalAlignment="Stretch"
             PlaceholderText="Введіть жанр книги..."
             Text="{x:Bind ViewModel.Genre, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             TextWrapping="Wrap" />
         <Button
             x:Name="PickFileButton"
+            x:Uid="PickFileButton"
             Margin="0,10,0,0"
             HorizontalAlignment="Left"
             Command="{x:Bind ViewModel.PickImageFileCommand}"
             Content="Вибрати шлях до зображення" />
         <CheckBox
-            x:Name="IsFacouriteTextBox"
+            x:Name="IsFavouriteCheckBox"
+            x:Uid="IsFavouriteCheckBox"
             HorizontalAlignment="Stretch"
+            Content="Is Favourite"
             IsChecked="{x:Bind ViewModel.IsFavourite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
         <Button
             x:Name="SaveButton"
+            x:Uid="SaveButton"
             Width="150"
             Margin="0,10,0,0"
             HorizontalAlignment="Right"
@@ -49,6 +56,7 @@
 
         <ContentDialog
             x:Name="MessageDialog"
+            x:Uid="MessageDialog"
             Title="Error"
             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
             CornerRadius="8"
@@ -57,6 +65,7 @@
             PrimaryButtonText="OK">
             <StackPanel>
                 <TextBlock
+                    x:Uid="ErrorMessageTextBlock"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="Invalid arguments passed into the form"
                     TextWrapping="Wrap" />

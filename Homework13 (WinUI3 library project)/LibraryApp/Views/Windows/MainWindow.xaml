@@ -7,7 +7,7 @@
     xmlns:local="using:LibraryApp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:LibraryApp.ViewModels.WindowViewModels"
-    Title="Бібліотека"
+    Title="Library"
     mc:Ignorable="d">
 
     <Window.SystemBackdrop>
@@ -16,6 +16,7 @@
 
     <NavigationView
         x:Name="MainWindowNavigationView"
+        x:Uid="NavigationView"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
         ExpandedModeThresholdWidth="500"
         IsBackButtonVisible="Collapsed"
@@ -24,12 +25,11 @@
         IsSettingsVisible="True"
         IsTabStop="False"
         PaneDisplayMode="Left"
-        PaneTitle="Меню навігації"
         SelectionChanged="MainWindowNavigationView_SelectionChanged"
         SelectionFollowsFocus="Disabled">
         <NavigationView.MenuItems>
             <NavigationViewItem
-                Content="Всі книги"
+                x:Uid="NavigationViewItem"
                 SelectsOnInvoked="True"
                 Tag="BooksPage">
                 <NavigationViewItem.Icon>

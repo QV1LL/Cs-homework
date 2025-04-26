@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:entitiesviewmodels="using:LibraryApp.ViewModels.EntityViewModels"
     xmlns:itemsView="using:Microsoft.UI.Xaml.Controls"
+    xmlns:l="using:WinUI3Localizer"
     xmlns:local="using:LibraryApp.ViewModels.PageViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -21,29 +22,33 @@
             Spacing="10">
             <ComboBox
                 x:Name="GenreFilter"
+                x:Uid="GenreFilterComboBox"
                 Width="200"
                 ItemsSource="{x:Bind ViewModel.Genres, Mode=OneWay}"
-                PlaceholderText="All Genres"
                 SelectedItem="{x:Bind ViewModel.SelectedGenre, Mode=TwoWay}" />
             <ComboBox
                 x:Name="SortingComboBox"
+                x:Uid="SortingComboBox"
                 Width="200"
                 ItemsSource="{x:Bind ViewModel.SortingStrategies, Mode=OneWay}"
-                PlaceholderText="Sort by"
+                PlaceholderText=""
                 SelectedItem="{x:Bind ViewModel.SelectedSortingStrategy, Mode=TwoWay}" />
             <TextBox
                 x:Name="SearchBox"
+                x:Uid="SearchBox"
                 Width="200"
-                PlaceholderText="Search by title or author..."
+                PlaceholderText=""
                 Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <Button
+                x:Uid="ToggleLayoutButton"
                 Width="150"
                 Command="{x:Bind ViewModel.ToggleLayoutCommand}"
-                Content="Toogle layout" />
+                Content="" />
             <Button
+                x:Uid="AddBookButton"
                 Width="150"
                 Command="{x:Bind ViewModel.AddBookCommand}"
-                Content="Add book" />
+                Content="" />
         </StackPanel>
 
         <ItemsView

@@ -15,6 +15,10 @@ namespace GeologicalFindingAccountingApp.Presentation.Views
             var currentTheme = (App.MainWindow?.Content as FrameworkElement)!.RequestedTheme;
             ThemeComboBox.SelectedItem = ThemeComboBox.Items
                 .FirstOrDefault(i => (i as ComboBoxItem)!.Tag.ToString() == currentTheme.ToString());
+
+            var currentLanguage = Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride;
+            LanguageComboBox.SelectedItem = LanguageComboBox.Items
+                .FirstOrDefault(i => (i as ComboBoxItem)!.Tag.ToString() == currentLanguage);
         }
 
         private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -29,6 +33,15 @@ namespace GeologicalFindingAccountingApp.Presentation.Views
                     "Dark" => ElementTheme.Dark,
                     _ => ElementTheme.Default
                 };
+            }
+        }
+
+        private async void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LanguageComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string? language = selectedItem.Tag?.ToString();
+                Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language;
             }
         }
     }
