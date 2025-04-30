@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="App.View.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:App.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:App.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:DateTimeToDaysConverter x:Key="DateTimeToDaysConverter" />
+    </Page.Resources>
+
+    <StackPanel Padding="20" Spacing="20">
+        <StackPanel Orientation="Horizontal" Spacing="5">
+            <ToggleSwitch x:Name="LightToggleSwitch" IsOn="{x:Bind ViewModel.IsLightOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{x:Bind ViewModel.LightStateMessage, Mode=OneWay}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="5">
+            <Slider
+                x:Name="TemperatureSlider"
+                Width="200"
+                Maximum="40"
+                Minimum="0"
+                Value="{x:Bind ViewModel.Temperature, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock x:Name="TemperatureValue" Text="{x:Bind ViewModel.Temperature, Mode=OneWay}" />
+        </StackPanel>
+        <TextBox x:Name="RoomNameTextBox" Text="{x:Bind ViewModel.RoomName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <StackPanel Orientation="Horizontal" Spacing="5">
+            <DatePicker x:Name="NextServiceDatePicker" Date="{x:Bind ViewModel.DaysToServiceLeft, Mode=TwoWay, Converter={StaticResource DateTimeToDaysConverter}}" />
+            <TextBlock Text="{x:Bind ViewModel.DaysToServiceLeft, Mode=OneWay}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="5">
+            <ComboBox
+                x:Name="AvailableModesComboBox"
+                ItemsSource="{x:Bind ViewModel.AvailableModes}"
+                SelectedItem="{x:Bind ViewModel.SelectedMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="{x:Bind ViewModel.SelectedMode, Mode=OneWay}" />
+        </StackPanel>
+    </StackPanel>
+</Page>
