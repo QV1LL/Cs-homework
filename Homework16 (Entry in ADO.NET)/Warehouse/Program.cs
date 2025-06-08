@@ -14,7 +14,7 @@ internal static class Program
 
     static void Main(string[] args)
     {
-        
+        FillDatabaseIfEmpty();
     }
 
     private static void FillDatabaseIfEmpty()
@@ -25,7 +25,7 @@ internal static class Program
         {
             new Provider { Title = "Якийсь фермер" },
             new Provider { Title = "Приватний підприємець" },
-            new Provider { Title = "" }
+            new Provider { Title = "Ще якийсь поставщик)))" }
         };
         foreach (var provider in providers) provider.Save();
 

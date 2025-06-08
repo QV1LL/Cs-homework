@@ -1,7 +1,4 @@
-﻿using System.Data;
-using System.Data.Common;
-using System.Data.SQLite;
-using Warehouse.Exceptions;
+﻿using System.Data.SQLite;
 
 namespace Warehouse.Entities;
 
