@@ -4,9 +4,9 @@ namespace Warehouse.Entities;
 
 internal class Provider
 {
-    public Guid Id { get; set; }
+    internal Guid Id { get; set; }
 
-    public string Title
+    internal string Title
     {
         get => field;
         set
@@ -18,12 +18,12 @@ internal class Provider
         }
     }
 
-    public static string ConnectionString = null!;
-    public static string TableName = "Providers";
+    internal static string ConnectionString = null!;
+    internal static string TableName = "Providers";
 
-    public Provider() { }
+    internal Provider() { }
 
-    public Provider(Guid id)
+    internal Provider(Guid id)
     {
         using var connection = new SQLiteConnection(ConnectionString);
         connection.Open();
@@ -40,7 +40,7 @@ internal class Provider
         Title = reader.GetString(reader.GetOrdinal(nameof(Title)));
     }
 
-    public void Save()
+    internal void Save()
     {
         using var connection = new SQLiteConnection(ConnectionString);
         connection.Open();
@@ -61,7 +61,7 @@ internal class Provider
         command.ExecuteNonQuery();
     }
 
-    public void Delete()
+    internal void Delete()
     {
         if (Id == Guid.Empty) return;
 
@@ -74,7 +74,7 @@ internal class Provider
         deleteCommand.ExecuteNonQuery();
     }
 
-    public static IEnumerable<Provider> GetAll()
+    internal static IEnumerable<Provider> GetAll()
     {
         var providers = new List<Provider>();
         using var connection = new SQLiteConnection(ConnectionString);

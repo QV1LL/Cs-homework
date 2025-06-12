@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Warehouse.sqlite" uuid="1a4e196f-8cf1-4bc3-abf5-275dede8c74f">
+    <data-source source="LOCAL" name="Warehouse" uuid="cf1e71f5-f9e5-4c00-806a-24061ed23457">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:Warehouse.sqlite</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="Warehouse" uuid="329da11f-0798-4144-8321-9c64f37af8d7">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:E:\Epic\Visual Studio\C#\Homework16 (Entry in ADO.NET)\Warehouse\bin\Debug\net9.0\Warehouse.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:E:\Epic\Visual Studio\C#\Homework16 (Entry in ADO.NET)\Warehouse\bin\Release\net9.0\Warehouse.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

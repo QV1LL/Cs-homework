@@ -4,9 +4,9 @@ namespace Warehouse.Entities;
 
 internal class Product
 {
-    public Guid Id { get; set; }
+    internal Guid Id { get; set; }
 
-    public string Title
+    internal string Title
     {
         get => field;
         set
@@ -18,7 +18,7 @@ internal class Product
         }
     }
 
-    public string Type
+    internal string Type
     {
         get => field;
         set
@@ -30,14 +30,9 @@ internal class Product
         }
     }
 
-    private Guid ProviderId { get; set; }
-    public Provider Provider
-    {
-        get => field ?? new Provider(ProviderId);
-        set => field = value;
-    }
+    internal Provider Provider { get; set; }
 
-    public int Quantity
+    internal int Quantity
     {
         get => field;
         set
@@ -49,7 +44,7 @@ internal class Product
         }
     }
 
-    public decimal Price
+    internal decimal Price
     {
         get => field;
         set
@@ -61,7 +56,7 @@ internal class Product
         }
     }
 
-    public DateTimeOffset SupplyDate
+    internal DateTimeOffset SupplyDate
     {
         get => field;
         set
@@ -71,14 +66,14 @@ internal class Product
 
             field = value;
         }
-    }
+    } = DateTimeOffset.Now;
 
-    public static string ConnectionString = null!;
-    public static string TableName = "Products";
+    internal static string ConnectionString = null!;
+    internal static string TableName = "Products";
 
-    public Product() { }
+    internal Product() { }
 
-    public Product(Guid id)
+    internal Product(Guid id)
     {
         using var connection = new SQLiteConnection(ConnectionString);
         connection.Open();
@@ -94,13 +89,13 @@ internal class Product
         Id = id;
         Title = reader.GetString(reader.GetOrdinal(nameof(Title)));
         Type = reader.GetString(reader.GetOrdinal(nameof(Type)));
-        ProviderId = reader.GetGuid(reader.GetOrdinal(nameof(ProviderId)));
+        Provider = new Provider(reader.GetGuid(reader.GetOrdinal("ProviderId")));
         Quantity = reader.GetInt32(reader.GetOrdinal(nameof(Quantity)));
         Price = reader.GetDecimal(reader.GetOrdinal(nameof(Price)));
         SupplyDate = reader.GetDateTime(reader.GetOrdinal(nameof(SupplyDate)));
     }
 
-    public void Save()
+    internal void Save()
     {
         using var connection = new SQLiteConnection(ConnectionString);
         connection.Open();
@@ -126,7 +121,7 @@ internal class Product
         command.ExecuteNonQuery();
     }
 
-    public static IEnumerable<Product> GetAll()
+    internal static IEnumerable<Product> GetAll()
     {
         var products = new List<Product>();
         using var conn = new SQLiteConnection(ConnectionString);
@@ -143,7 +138,7 @@ internal class Product
                 Id = reader.GetGuid(reader.GetOrdinal(nameof(Id))),
                 Title = reader.GetString(reader.GetOrdinal(nameof(Title))),
                 Type = reader.GetString(reader.GetOrdinal(nameof(Type))),
-                ProviderId = reader.GetGuid(reader.GetOrdinal(nameof(ProviderId))),
+                Provider = new Provider(reader.GetGuid(reader.GetOrdinal("ProviderId"))),
                 Quantity = reader.GetInt32(reader.GetOrdinal(nameof(Quantity))),
                 Price = reader.GetDecimal(reader.GetOrdinal(nameof(Price))),
                 SupplyDate = reader.GetDateTime(reader.GetOrdinal(nameof(SupplyDate)))
@@ -154,7 +149,7 @@ internal class Product
         return products;
     }
 
-    public void Delete()
+    internal void Delete()
     {
         if (Id == Guid.Empty) return;
 

@@ -1,4 +1,6 @@
-﻿using Warehouse.Entities;
+﻿using Spectre.Console.Cli;
+using Warehouse.Commands;
+using Warehouse.Entities;
 
 namespace Warehouse;
 
@@ -14,29 +16,17 @@ internal static class Program
 
     static void Main(string[] args)
     {
-        FillDatabaseIfEmpty();
-    }
+        var app = new CommandApp();
 
-    private static void FillDatabaseIfEmpty()
-    {
-        if (Provider.GetAll().Any() || Product.GetAll().Any()) return;
-
-        var providers = new[]
+        app.Configure(config =>
         {
-            new Provider { Title = "Якийсь фермер" },
-            new Provider { Title = "Приватний підприємець" },
-            new Provider { Title = "Ще якийсь поставщик)))" }
-        };
-        foreach (var provider in providers) provider.Save();
+            config.AddCommand<HelpCommand>("help");
+            config.AddCommand<AddCommand>("add");
+            config.AddCommand<UpdateCommand>("update");
+            config.AddCommand<DeleteCommand>("delete");
+            config.AddCommand<ShowCommand>("show");
+        });
 
-        var products = new[]
-        {
-            new Product { Title = "Молоко", Type = "Продукти", Provider = providers[0], Quantity = 100, Price = 59.99m, SupplyDate = DateTimeOffset.Now },
-            new Product { Title = "Хліб", Type = "Продукти", Provider = providers[0], Quantity = 200, Price = 29.50m, SupplyDate = DateTimeOffset.Now },
-            new Product { Title = "Кава", Type = "Напої", Provider = providers[1], Quantity = 50, Price = 299.00m, SupplyDate = DateTimeOffset.Now },
-            new Product { Title = "Сир", Type = "Продукти", Provider = providers[2], Quantity = 75, Price = 199.99m, SupplyDate = DateTimeOffset.Now },
-            new Product { Title = "Чай", Type = "Напої", Provider = providers[1], Quantity = 60, Price = 149.50m, SupplyDate = DateTimeOffset.Now }
-        };
-        foreach (var product in products) product.Save();
+        app.Run(args);
     }
 }

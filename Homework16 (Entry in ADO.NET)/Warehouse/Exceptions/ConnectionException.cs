@@ -4,7 +4,7 @@ namespace Warehouse.Exceptions;
 
 internal class ConnectionException : DbException
 {
-    public ConnectionException(string connectionString)
+    internal ConnectionException(string connectionString)
         : base($"Failed connection to: {connectionString}")
     {
     }
