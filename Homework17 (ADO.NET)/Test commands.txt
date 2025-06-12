@@ -1,0 +1,27 @@
+dotnet run show
+
+dotnet run show -f titles
+
+dotnet run show -f colors
+
+dotnet run show -f max-calorie
+
+dotnet run show -f min-calorie
+
+dotnet run show -f avg-calorie
+
+dotnet run show -f vegetables-count
+
+dotnet run show -f fruits-count
+
+dotnet run show -f product-count-of-color
+
+dotnet run show -f product-count-of-every-color
+
+dotnet run show -f below-calorie -c 80
+
+dotnet run show -f above-calorie -c 100
+
+dotnet run show -f between-calorie
+
+dotnet run show -f yellow-or-red
