@@ -1,0 +1,37 @@
+// Example for show commands
+
+Warehouse.exe show products-all
+
+Warehouse.exe show products-all --min-quantity 10
+
+Warehouse.exe show products-all --min-price 100
+
+Warehouse.exe show product-with-min --condition quantity
+
+Warehouse.exe show product-with-min --condition price
+
+Warehouse.exe show product-with-max --condition quantity
+
+Warehouse.exe show product-with-max --condition price
+
+Warehouse.exe show products-by-type
+
+Warehouse.exe show products-by-provider
+
+Warehouse.exe show oldest-product
+
+Warehouse.exe show products-older-than --condition 1
+
+Warehouse.exe show providers-all
+
+Warehouse.exe show provider-with-most
+
+Warehouse.exe show provider-with-least
+
+Warehouse.exe show types-all
+
+Warehouse.exe show type-with-most
+
+Warehouse.exe show type-with-least
+
+Warehouse.exe show average-quantity-by-type
