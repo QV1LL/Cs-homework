@@ -33,12 +33,12 @@ internal class ShowCommand : Command<ShowCommand.Settings>
         {
             case "titles":
                 var titles = allProducts.Select(p => p.Title).ToArray();
-                LayoutRenderService.RenderList("Product Titles", titles);
+                LayoutRenderService.RenderList("Titles", titles);
                 break;
 
             case "colors":
                 var colors = allProducts.Select(p => p.Color.Name).Distinct().ToArray();
-                LayoutRenderService.RenderList("Product Colors", colors);
+                LayoutRenderService.RenderList("Colors", colors);
                 break;
 
             case "max-calorie":

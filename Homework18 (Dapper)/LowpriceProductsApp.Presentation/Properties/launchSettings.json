@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LowpriceProductsApp.Presentation (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LowpriceProductsApp.Presentation (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
