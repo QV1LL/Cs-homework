@@ -11,7 +11,19 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
+	  <LangVersion>preview</LangVersion>
+	  <PublishTrimmed>false</PublishTrimmed>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Views\Pages\MainPage.xaml" />
+    <None Remove="Views\Pages\ManagePages\ManageCitiesPage.xaml" />
+    <None Remove="Views\Pages\ManagePages\ManageCountriesPage.xaml" />
+    <None Remove="Views\Pages\ManagePages\ManageCustomersPage.xaml" />
+    <None Remove="Views\Pages\ManagePages\ManagePromotionalGoodsPage.xaml" />
+    <None Remove="Views\Pages\ManagePages\ManageSectionsPage.xaml" />
+    <None Remove="Views\Windows\MainWindow.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -36,8 +48,53 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.6" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LowpriceProductsApp.Infrastructure\LowpriceProductsApp.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Windows\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\Pages\ViewPages\" />
+    <Folder Include="Views\Pages\ViewPages\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\ManagePages\ManagePromotionalGoodsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\ManagePages\ManageSectionsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\ManagePages\ManageCustomersPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\ManagePages\ManageCountriesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\ManagePages\ManageCitiesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!--

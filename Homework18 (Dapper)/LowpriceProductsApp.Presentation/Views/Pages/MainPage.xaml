@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="LowpriceProductsApp.Presentation.Views.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:LowpriceProductsApp.Presentation.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <NavigationView
+        x:Name="NavView"
+        IsBackButtonVisible="Collapsed"
+        IsPaneOpen="False"
+        IsSettingsVisible="False"
+        PaneDisplayMode="Left"
+        SelectionChanged="NavView_SelectionChanged">
+        <NavigationView.MenuItems>
+
+            <NavigationViewItem Content="Manage pages" Icon="Manage">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Manage cities" Tag="ManagePages.ManageCitiesPage" />
+                    <NavigationViewItem Content="Manage countries" Tag="ManagePages.ManageCountriesPage" />
+                    <NavigationViewItem Content="Manage customers" Tag="ManagePages.ManageCustomersPage" />
+                    <NavigationViewItem Content="Manage Sections" Tag="ManagePages.ManageSectionsPage" />
+                    <NavigationViewItem Content="Manage promotional goods" Tag="ManagePages.ManagePromotionalGoodsPage" />
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+
+            <NavigationViewItem
+                Content="View pages"
+                Icon="View"
+                Tag="ViewPages">
+                <NavigationViewItem.MenuItems />
+            </NavigationViewItem>
+
+        </NavigationView.MenuItems>
+        <Frame x:Name="Frame" />
+    </NavigationView>
+</Page>
