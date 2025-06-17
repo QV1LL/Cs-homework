@@ -3,7 +3,9 @@ using CommunityToolkit.Mvvm.Input;
 using LowpriceProductsApp.Domain.Entities;
 using LowpriceProductsApp.Domain.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace LowpriceProductsApp.Presentation.ViewModels.Pages.ManagePages;
 
@@ -11,6 +13,8 @@ public partial class ManageCitiesPageViewModel : ObservableObject
 {
     [ObservableProperty]
     public partial string Name { get; set; } = string.Empty;
+    [ObservableProperty]
+    public partial Country Country { get; set; } = null!;
 
     [ObservableProperty]
     public partial bool IsErrorVisible { get; set; } = false;
@@ -24,8 +28,13 @@ public partial class ManageCitiesPageViewModel : ObservableObject
         set
         {
             SetProperty(ref field, value);
-            Name = value?.Name ?? string.Empty;
-            IsCitySelected = value != null;
+            IsCitySelected = field != null;
+
+            if (IsCitySelected)
+            {
+                Name = value?.Name ?? string.Empty;
+                Country = Countries.First(c => c.Id == field?.Country.Id);
+            }
         }
     }
 
@@ -33,12 +42,17 @@ public partial class ManageCitiesPageViewModel : ObservableObject
     public partial bool IsCitySelected {  get; set; }
 
     public ObservableCollection<City> Cities { get; set; } = new ();
+    public List<Country> Countries { get; } = new();
 
     private readonly ICitiesRepository _cityRepository;
 
-    public ManageCitiesPageViewModel(ICitiesRepository cityRepository)
+    public ManageCitiesPageViewModel(
+        ICitiesRepository cityRepository,
+        ICountriesRepository countriesRepository)
     {
         _cityRepository = cityRepository;
+        Countries.AddRange(countriesRepository.GetAll());
+
         UpdateCollection();
     }
 
@@ -47,7 +61,11 @@ public partial class ManageCitiesPageViewModel : ObservableObject
     {
         try
         {
-            var city = new City { Name = Name };
+            var city = new City
+            {
+                Name = Name,
+                Country = Country,
+            };
 
             if (_cityRepository.Find(c => c.Name == city.Name) != null)
                 throw new ArgumentException($"City with name {city.Name} is already exist");
@@ -71,6 +89,7 @@ public partial class ManageCitiesPageViewModel : ObservableObject
                 throw new ArgumentNullException("No one city is selected");
 
             SelectedCity.Name = Name;
+            SelectedCity.Country = Country;
             _cityRepository.Add(SelectedCity);
             UpdateCollection();
         }

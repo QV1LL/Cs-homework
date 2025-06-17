@@ -7,32 +7,23 @@ namespace LowpriceProductsApp.Infrastructure.Persistence.Repositories.ConcreateR
 
 public class CustomersRepository : GenericRepository<Customer>, ICustomersRepository
 {
-    private readonly ICountriesRepository _countriesRepository;
     private readonly ICitiesRepository _citiesRepository;
 
     public CustomersRepository(
         ConnectionManager connectionManager, 
-        ICitiesRepository citiesRepository, 
-        ICountriesRepository countriesRepository)
+        ICitiesRepository citiesRepository)
        : base(
            connectionManager,
            "Customers",
-           new List<string> { "Id", "Name", "Gender", "Email", "CountryId", "CityId"}
+           new List<string> { "Id", "Name", "Gender", "Email", "CityId"}
        )
-    {
-        _countriesRepository = countriesRepository;
-        _citiesRepository = citiesRepository;
-    }
+    { _citiesRepository = citiesRepository; }
 
     public override IEnumerable<Customer> GetAll()
     {
         var customers = base.GetAll();
-
         foreach ( var customer in customers )
-        {
             customer.City = _citiesRepository.Get(customer.CityId);
-            customer.Country = _countriesRepository.Get(customer.CountryId);
-        }
 
         return customers;
     }

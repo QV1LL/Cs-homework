@@ -43,6 +43,8 @@ public class PromotionalProduct : IEntity
             StartPriceWholePart = field.WholePart;
         }
     }
+    public Money PriceWithDiscount 
+        => StartPrice * (100 - DiscountPercentage) / 100;
     [Column("DiscountPercentage")]
     public int DiscountPercentage
     {

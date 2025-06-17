@@ -1,4 +1,5 @@
 ﻿using LowpriceProductsApp.Presentation.ViewModels.Pages.ManagePages;
+using LowpriceProductsApp.Presentation.ViewModels.Pages.ViewPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,12 @@ public static class DependencyInjection
         services.AddTransient<ManageCustomersPageViewModel>();
         services.AddTransient<ManagePromotionalGoodsPageViewModel>();
         services.AddTransient<ManageSectionsPageViewModel>();
+        
+        services.AddTransient<ViewCitiesPageViewModel>();
+        services.AddTransient<ViewCountriesPageViewModel>();
+        services.AddTransient<ViewCustomersPageViewModel>();
+        services.AddTransient<ViewPromotionalGoodsPageViewModel>();
+        services.AddTransient<ViewSectionsPageViewModel>();
 
         return services;
     }

@@ -39,19 +39,6 @@ public class Customer : IEntity
             field = value;
         }
     }
-    [Column("CountryId")]
-    public Guid CountryId { get; set; }
-    public Country Country
-    {
-        get => field;
-        set
-        {
-            field = value;
-
-            if (value?.Id is Guid countryId)
-                CountryId = countryId;
-        }
-    }
     [Column("CityId")]
     public Guid CityId { get; set; }
     public City City

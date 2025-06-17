@@ -31,7 +31,13 @@
                 Content="View pages"
                 Icon="View"
                 Tag="ViewPages">
-                <NavigationViewItem.MenuItems />
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="View cities" Tag="ViewPages.ViewCitiesPage" />
+                    <NavigationViewItem Content="View countries" Tag="ViewPages.ViewCountriesPage" />
+                    <NavigationViewItem Content="View customers" Tag="ViewPages.ViewCustomersPage" />
+                    <NavigationViewItem Content="View Sections" Tag="ViewPages.ViewSectionsPage" />
+                    <NavigationViewItem Content="View promotional goods" Tag="ViewPages.ViewPromotionalGoodsPage" />
+                </NavigationViewItem.MenuItems>
             </NavigationViewItem>
 
         </NavigationView.MenuItems>

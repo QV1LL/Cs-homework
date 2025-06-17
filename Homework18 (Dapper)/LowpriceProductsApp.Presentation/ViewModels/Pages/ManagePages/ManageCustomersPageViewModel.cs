@@ -19,8 +19,6 @@ public partial class ManageCustomersPageViewModel : ObservableObject
     [ObservableProperty]
     public partial string Email {  get; set; } = string.Empty;
     [ObservableProperty]
-    public partial Country Country { get; set; } = null!;
-    [ObservableProperty]
     public partial City City { get; set; } = null!;
 
 
@@ -44,7 +42,6 @@ public partial class ManageCustomersPageViewModel : ObservableObject
                 Name = field?.Name ?? string.Empty;
                 Gender = field!.Gender;
                 Email = field?.Email ?? string.Empty;
-                Country = Countries.First(c => c.Id == field!.Country.Id);
                 City = Cities.First(c => c.Id == field!.City.Id);
             }
         }
@@ -55,24 +52,16 @@ public partial class ManageCustomersPageViewModel : ObservableObject
 
     public ObservableCollection<Customer> Customers { get; set; } = new();
     public List<City> Cities { get; } = new ();
-    public List<Country> Countries { get; } = new ();
     public IEnumerable<Gender> Genders => Enum.GetValues<Gender>();
 
     private readonly ICustomersRepository _customersRepository;
-    private readonly ICitiesRepository _citiesRepository;
-    private readonly ICountriesRepository _countriesRepository;
 
     public ManageCustomersPageViewModel(
         ICustomersRepository customersRepository,
-        ICitiesRepository citiesRepository,
-        ICountriesRepository countriesRepository)
+        ICitiesRepository citiesRepository)
     {
         _customersRepository = customersRepository;
-        _citiesRepository = citiesRepository;
-        _countriesRepository = countriesRepository;
-
-        Cities.AddRange(_citiesRepository.GetAll());
-        Countries.AddRange(_countriesRepository.GetAll());
+        Cities.AddRange(citiesRepository.GetAll());
 
         UpdateCollection();
     }
@@ -87,7 +76,6 @@ public partial class ManageCustomersPageViewModel : ObservableObject
                 Name = Name,
                 Gender = Gender,
                 Email = Email,
-                Country = Country,
                 City = City,
             };
 
@@ -118,7 +106,6 @@ public partial class ManageCustomersPageViewModel : ObservableObject
                 Name = Name,
                 Gender = Gender,
                 Email = Email,
-                Country = Country,
                 City = City,
             };
 

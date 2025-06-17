@@ -47,20 +47,6 @@
                     PlaceholderText="Enter email"
                     Text="{x:Bind ViewModel.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <ComboBox
-                    Width="300"
-                    ItemsSource="{x:Bind ViewModel.Countries, Mode=OneTime}"
-                    PlaceholderText="Select country"
-                    SelectedItem="{x:Bind ViewModel.Country, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="entities:Country">
-                            <TextBlock
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                Text="{x:Bind Name}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
 
                 <ComboBox
                     Width="300"
@@ -118,7 +104,6 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
@@ -140,11 +125,7 @@
                             Margin="5"
                             FontWeight="Bold"
                             Text="Email" />
-                        <TextBlock
-                            Grid.Column="4"
-                            Margin="5"
-                            FontWeight="Bold"
-                            Text="Country" />
+
                         <TextBlock
                             Grid.Column="5"
                             Margin="5"
@@ -157,7 +138,6 @@
                 <DataTemplate x:DataType="entities:Customer">
                     <Grid ColumnSpacing="5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -182,10 +162,6 @@
                             Text="{x:Bind Email}" />
                         <TextBlock
                             Grid.Column="4"
-                            Margin="5"
-                            Text="{x:Bind Country.Name}" />
-                        <TextBlock
-                            Grid.Column="5"
                             Margin="5"
                             Text="{x:Bind City.Name}" />
                     </Grid>

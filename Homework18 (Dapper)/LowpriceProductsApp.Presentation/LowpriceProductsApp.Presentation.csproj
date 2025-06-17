@@ -22,6 +22,11 @@
     <None Remove="Views\Pages\ManagePages\ManageCustomersPage.xaml" />
     <None Remove="Views\Pages\ManagePages\ManagePromotionalGoodsPage.xaml" />
     <None Remove="Views\Pages\ManagePages\ManageSectionsPage.xaml" />
+    <None Remove="Views\Pages\ViewPages\ViewCitiesPage.xaml" />
+    <None Remove="Views\Pages\ViewPages\ViewCountriesPage.xaml" />
+    <None Remove="Views\Pages\ViewPages\ViewCustomersPage.xaml" />
+    <None Remove="Views\Pages\ViewPages\ViewPromotionalGoodsPage.xaml" />
+    <None Remove="Views\Pages\ViewPages\ViewSectionsPage.xaml" />
     <None Remove="Views\Windows\MainWindow.xaml" />
   </ItemGroup>
 
@@ -68,8 +73,29 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\Pages\ViewPages\" />
-    <Folder Include="Views\Pages\ViewPages\" />
+    <Page Update="Views\Pages\ViewPages\ViewSectionsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\ViewPages\ViewPromotionalGoodsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\ViewPages\ViewCustomersPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\ViewPages\ViewCountriesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\ViewPages\ViewCitiesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Pages\ManagePages\ManagePromotionalGoodsPage.xaml">

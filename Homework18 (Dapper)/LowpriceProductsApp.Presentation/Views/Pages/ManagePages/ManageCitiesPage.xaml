@@ -35,6 +35,20 @@
                     HorizontalAlignment="Left"
                     PlaceholderText="Enter a name"
                     Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <ComboBox
+                    Width="300"
+                    ItemsSource="{x:Bind ViewModel.Countries, Mode=OneTime}"
+                    PlaceholderText="Select country"
+                    SelectedItem="{x:Bind ViewModel.Country, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="entities:Country">
+                            <TextBlock
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                Text="{x:Bind Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
                 <InfoBar
                     Width="300"
                     HorizontalAlignment="Left"
@@ -74,6 +88,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
@@ -83,6 +98,10 @@
                             Grid.Column="1"
                             FontWeight="Bold"
                             Text="Name" />
+                        <TextBlock
+                            Grid.Column="2"
+                            FontWeight="Bold"
+                            Text="Country" />
                     </Grid>
                 </DataTemplate>
             </ListView.HeaderTemplate>
@@ -92,9 +111,11 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="{x:Bind Id}" />
                         <TextBlock Grid.Column="1" Text="{x:Bind Name}" />
+                        <TextBlock Grid.Column="2" Text="{x:Bind Country.Name}" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
