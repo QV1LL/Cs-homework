@@ -7,7 +7,13 @@ namespace LowpriceProductsApp.Infrastructure.Persistence.Repositories.ConcreateR
 
 public class PromotionalGoodsRepository : GenericRepository<PromotionalProduct>, IPromotionalGoodsRepository
 {
-    public PromotionalGoodsRepository(ConnectionManager connectionManager)
+    private readonly ICountriesRepository _countriesRepository;
+    private readonly ISectionsRepository _sectionsRepository;
+
+    public PromotionalGoodsRepository(
+        ConnectionManager connectionManager,
+        ICountriesRepository countriesRepository,
+        ISectionsRepository sectionsRepository)
        : base(
            connectionManager,
            "PromotionalGoods",
@@ -15,6 +21,20 @@ public class PromotionalGoodsRepository : GenericRepository<PromotionalProduct>,
                               "CountryId", "SectionId", "PromotionStart", "PromotionEnd" }
        )
     {
+        _countriesRepository = countriesRepository;
+        _sectionsRepository = sectionsRepository;
+    }
 
+    public override IEnumerable<PromotionalProduct> GetAll()
+    {
+        var products = base.GetAll();
+
+        foreach (var product in products)
+        {
+            product.Section = _sectionsRepository.Get(product.SectionId);
+            product.Country = _countriesRepository.Get(product.CountryId);
+        }
+
+        return products;
     }
 }

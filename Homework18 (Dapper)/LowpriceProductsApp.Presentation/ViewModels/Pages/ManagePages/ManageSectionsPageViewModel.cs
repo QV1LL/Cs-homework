@@ -36,9 +36,9 @@ public partial class ManageSectionsPageViewModel : ObservableObject
 
     private readonly ISectionsRepository _sectionsRepository;
 
-    public ManageSectionsPageViewModel(ISectionsRepository cityRepository)
+    public ManageSectionsPageViewModel(ISectionsRepository sectionsRepository)
     {
-        _sectionsRepository = cityRepository;
+        _sectionsRepository = sectionsRepository;
         UpdateCollection();
     }
 

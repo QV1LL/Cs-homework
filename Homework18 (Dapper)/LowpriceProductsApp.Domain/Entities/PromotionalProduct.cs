@@ -21,7 +21,28 @@ public class PromotionalProduct : IEntity
             field = value;
         }
     }
-    public Money StartPrice { get; set; }
+
+    [Column("StartPriceWholePart")]
+    public int StartPriceWholePart { get; set; }
+    [Column("StartPriceDecimalPart")]
+    public int StartPriceDecimalPart { get; set; }
+    public Money StartPrice
+    {
+        get
+        {
+            if (field == null)
+                field = new Money(StartPriceWholePart, StartPriceDecimalPart);
+
+            return field;
+        }
+        set
+        {
+            field = value;
+
+            StartPriceDecimalPart = field.DecimalPart;
+            StartPriceWholePart = field.WholePart;
+        }
+    }
     [Column("DiscountPercentage")]
     public int DiscountPercentage
     {
@@ -36,10 +57,30 @@ public class PromotionalProduct : IEntity
     }
     [Column("CountryId")]
     public Guid CountryId { get; set; }
-    public Country Country { get; set; }
+    public Country Country
+    {
+        get => field;
+        set
+        {
+            field = value;
+
+            if (value.Id is Guid countryId)
+                CountryId = countryId;
+        }
+    }
     [Column("SectionId")]
     public Guid SectionId { get; set; }
-    public Section Section { get; set; }
+    public Section Section
+    {
+        get => field;
+        set
+        {
+            field = value;
+
+            if (value.Id is Guid sectionId)
+                SectionId = sectionId;
+        }
+    }
     [Column("PromotionStart")]
     public DateTimeOffset PromotionStart { get; set; }
     [Column("PromotionEnd")]

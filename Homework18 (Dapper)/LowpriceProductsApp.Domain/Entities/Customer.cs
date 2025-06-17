@@ -31,18 +31,38 @@ public class Customer : IEntity
         set
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Email не може бути порожнім");
+                throw new ArgumentException("Email cannot be empty");
 
             if (!Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-                throw new ArgumentException("Невірний формат email");
+                throw new ArgumentException("Invalid email template");
 
             field = value;
         }
     }
     [Column("CountryId")]
     public Guid CountryId { get; set; }
-    public Country Country { get; set; }
+    public Country Country
+    {
+        get => field;
+        set
+        {
+            field = value;
+
+            if (value?.Id is Guid countryId)
+                CountryId = countryId;
+        }
+    }
     [Column("CityId")]
     public Guid CityId { get; set; }
-    public City City { get; set; }
+    public City City
+    {
+        get => field;
+        set
+        {
+            field = value;
+
+            if (value?.Id is Guid cityId)
+                CityId = cityId;
+        }
+    }
 }

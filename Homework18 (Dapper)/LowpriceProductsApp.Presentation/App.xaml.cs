@@ -39,5 +39,6 @@ public partial class App : Application
     {
         SqlMapper.AddTypeHandler(new GuidTypeHandler());
         SqlMapper.AddTypeHandler(new NullableGuidTypeHandler());
+        SqlMapper.AddTypeHandler(new DateTimeOffsetTypeHandler());
     }
 }

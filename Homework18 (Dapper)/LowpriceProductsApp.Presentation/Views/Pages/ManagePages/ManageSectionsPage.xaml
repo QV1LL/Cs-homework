@@ -87,7 +87,7 @@
                 </DataTemplate>
             </ListView.HeaderTemplate>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="entities:Country">
+                <DataTemplate x:DataType="entities:Section">
                     <Grid ColumnSpacing="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
