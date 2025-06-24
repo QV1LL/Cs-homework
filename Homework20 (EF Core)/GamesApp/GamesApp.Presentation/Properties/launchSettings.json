@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GamesApp.Presentation (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "GamesApp.Presentation (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
