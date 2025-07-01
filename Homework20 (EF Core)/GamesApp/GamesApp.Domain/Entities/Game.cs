@@ -13,7 +13,7 @@ public class Game
         set
         {
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
+                throw new ArgumentNullException(nameof(Name));
 
             field = value;
         }
@@ -24,7 +24,7 @@ public class Game
         set
         {
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
+                throw new ArgumentNullException(nameof(Description));
 
             field = value;
         }
@@ -32,5 +32,5 @@ public class Game
     public GameType GameType { get; set; }
     public Guid StudioId {  get; set; }
     public Studio Studio { get; set; }
-    public List<string> Genres { get; set; }
+    public List<Genre> Genres { get; set; }
 }

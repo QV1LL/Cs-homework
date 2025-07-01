@@ -13,8 +13,8 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
 
         builder.HasKey(g => g.Id);
 
-        builder.Property(g => g.Id)
-               .HasDefaultValue(Guid.NewGuid());
+        builder.Property(c => c.Id)
+               .ValueGeneratedOnAdd();
 
         builder.Property(g => g.Name)
                .IsRequired()
@@ -31,6 +31,8 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
                .WithMany(s => s.Games)
                .HasForeignKey(g => g.StudioId);
 
-        builder.HasMany(g => g.Genres);
+        builder.HasMany(g => g.Genres)
+               .WithMany(g => g.Games)
+               .UsingEntity("GenresGames");
     }
 }

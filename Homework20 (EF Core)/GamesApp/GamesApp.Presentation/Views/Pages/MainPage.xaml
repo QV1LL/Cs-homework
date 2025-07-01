@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="GamesApp.Presentation.Views.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:GamesApp.Presentation.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <NavigationView
+        x:Name="NavView"
+        IsBackButtonVisible="Collapsed"
+        IsPaneOpen="False"
+        IsSettingsVisible="False"
+        PaneDisplayMode="Left"
+        SelectionChanged="NavView_SelectionChanged">
+        <NavigationView.MenuItems>
+
+            <NavigationViewItem Content="Manage pages" Icon="Manage">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Manage cities" Tag="ManagePages.ManageCitiesPage" />
+                    <NavigationViewItem Content="Manage games" Tag="ManagePages.ManageGamesPage" />
+                    <NavigationViewItem Content="Manage genres" Tag="ManagePages.ManageGenresPage" />
+                    <NavigationViewItem Content="Manage studios" Tag="ManagePages.ManageStudiosPage" />
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+
+            <NavigationViewItem
+                Content="View pages"
+                Icon="View"
+                Tag="ViewPages">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="View cities" Tag="ViewPages.ViewCitiesPage" />
+                    <NavigationViewItem Content="View games" Tag="ViewPages.ViewGamesPage" />
+                    <NavigationViewItem Content="View genres" Tag="ViewPages.ViewGenresPage" />
+                    <NavigationViewItem Content="View studios" Tag="ViewPages.ViewStudiosPage" />
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+
+        </NavigationView.MenuItems>
+        <Frame x:Name="Frame" />
+    </NavigationView>
+</Page>

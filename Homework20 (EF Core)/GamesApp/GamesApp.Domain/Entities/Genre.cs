@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace GamesApp.Domain.Entities;
 
-public class City
+public class Genre
 {
     public Guid? Id { get; set; }
+
     public string Name
     {
         get => field;
@@ -18,17 +19,5 @@ public class City
         }
     }
 
-    public string Country
-    {
-        get => field;
-        set
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(Country));
-
-            field = value;
-        }
-    }
-
-    public List<Studio> Studios { get; set; } = new ();
+    public List<Game> Games { get; set; }
 }

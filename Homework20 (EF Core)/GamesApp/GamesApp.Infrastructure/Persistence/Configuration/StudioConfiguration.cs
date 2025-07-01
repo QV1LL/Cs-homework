@@ -14,8 +14,8 @@ public class StudioConfiguration : IEntityTypeConfiguration<Studio>
 
         builder.HasKey(s => s.Id);
 
-        builder.Property(s => s.Id)
-               .HasDefaultValue(Guid.NewGuid());
+        builder.Property(c => c.Id)
+               .ValueGeneratedOnAdd();
 
         builder.Property(s => s.Name)
                .IsRequired()

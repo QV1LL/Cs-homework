@@ -14,7 +14,7 @@ public class CityConfiguration : IEntityTypeConfiguration<City>
         builder.HasKey(c => c.Id);
 
         builder.Property(c => c.Id)
-               .HasDefaultValue(Guid.NewGuid());
+               .ValueGeneratedOnAdd();
 
         builder.Property(c => c.Name)
                .IsRequired()

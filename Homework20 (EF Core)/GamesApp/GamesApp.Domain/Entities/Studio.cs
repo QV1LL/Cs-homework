@@ -12,7 +12,7 @@ public class Studio
         set
         {
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
+                throw new ArgumentNullException(nameof(Name));
 
             field = value;
         }
