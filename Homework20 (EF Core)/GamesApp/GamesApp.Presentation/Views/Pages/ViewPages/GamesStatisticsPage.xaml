@@ -31,8 +31,8 @@
                                 FontSize="16"
                                 FontWeight="SemiBold"
                                 Text="Game Types Count" />
-                            <TextBlock Text="{x:Bind ViewModel.SingleplayerCount}" />
-                            <TextBlock Text="{x:Bind ViewModel.MultiplayerCount}" />
+                            <TextBlock Text="{x:Bind ViewModel.SingleplayerCountInformation}" />
+                            <TextBlock Text="{x:Bind ViewModel.MultiplayerCountInformation}" />
                         </StackPanel>
                     </Border>
 
