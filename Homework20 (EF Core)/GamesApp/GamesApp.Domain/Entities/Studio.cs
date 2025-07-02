@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GamesApp.Domain.Entities;
 
@@ -19,4 +20,5 @@ public class Studio
     }
     public List<Game> Games { get; set; } = new ();
     public List<City> Cities { get; set; } = new ();
+    public string AllCities => string.Join(", ", Cities.Select(c => c.Name));
 }

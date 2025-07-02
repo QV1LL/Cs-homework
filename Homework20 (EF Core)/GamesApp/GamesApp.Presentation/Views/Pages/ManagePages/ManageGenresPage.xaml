@@ -29,7 +29,7 @@
                     Margin="0,0,0,20"
                     HorizontalAlignment="Left"
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Text="Manage cities" />
+                    Text="Manage genres" />
                 <TextBox
                     Width="300"
                     HorizontalAlignment="Left"

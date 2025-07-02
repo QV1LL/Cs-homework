@@ -7,5 +7,154 @@
     xmlns:entities="using:GamesApp.Domain.Entities"
     xmlns:local="using:GamesApp.Presentation.Views.Pages.ManagePages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" />
+    mc:Ignorable="d">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Grid.Column="0"
+                Orientation="Vertical"
+                Spacing="7">
+                <TextBlock
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="Manage games" />
+                <TextBox
+                    Width="300"
+                    HorizontalAlignment="Left"
+                    PlaceholderText="Enter a name"
+                    Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Width="300"
+                    HorizontalAlignment="Left"
+                    PlaceholderText="Enter a description"
+                    Text="{x:Bind ViewModel.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <NumberBox
+                    Width="300"
+                    HorizontalAlignment="Left"
+                    Minimum="0"
+                    PlaceholderText="Enter a count of sales"
+                    Text="{x:Bind ViewModel.CountOfSales, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <ComboBox
+                    Header="Choose a game type"
+                    SelectedValue="{x:Bind ViewModel.GameType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedValuePath="Tag">
+                    <ComboBox.Items>
+                        <TextBlock Tag="Singleplayer" Text="Singleplayer" />
+                        <TextBlock Tag="Multiplayer" Text="Multiplayer" />
+                        <TextBlock Tag="Cooperative" Text="Cooperative" />
+                    </ComboBox.Items>
+                </ComboBox>
+
+                <ComboBox
+                    Header="Choose a studio"
+                    ItemsSource="{x:Bind ViewModel.Studios, Mode=OneTime}"
+                    SelectedItem="{x:Bind ViewModel.Studio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="entities:Studio">
+                            <TextBlock Text="{x:Bind Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Expander Header="Genres">
+                    <ListView
+                        x:Name="GenresListView"
+                        ItemsSource="{x:Bind ViewModel.Genres, Mode=OneTime}"
+                        SelectionChanged="GenresListView_SelectionChanged"
+                        SelectionMode="Multiple">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="entities:Genre">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Expander>
+
+                <InfoBar
+                    Width="300"
+                    HorizontalAlignment="Left"
+                    IsClosable="True"
+                    IsOpen="{x:Bind ViewModel.IsErrorVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Message="{x:Bind ViewModel.ErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Severity="Error" />
+            </StackPanel>
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="10">
+                <Button
+                    Command="{x:Bind ViewModel.AddCommand}"
+                    Content="Add"
+                    Style="{StaticResource AccentButtonStyle}" />
+                <Button
+                    Command="{x:Bind ViewModel.UpdateCommand}"
+                    Content="Update"
+                    Visibility="{x:Bind ViewModel.IsGameSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <Button
+                    Command="{x:Bind ViewModel.DeleteCommand}"
+                    Content="Delete"
+                    Visibility="{x:Bind ViewModel.IsGameSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </StackPanel>
+        </Grid>
+
+        <ListView
+            Grid.Row="1"
+            Margin="0,20,0,0"
+            ItemsSource="{x:Bind ViewModel.Games, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{x:Bind ViewModel.SelectedGame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ListView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            FontWeight="Bold"
+                            Text="Name" />
+                        <TextBlock
+                            Grid.Column="1"
+                            FontWeight="Bold"
+                            Text="Country" />
+                        <TextBlock
+                            Grid.Column="2"
+                            FontWeight="Bold"
+                            Text="Genres" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.HeaderTemplate>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="entities:Game">
+                    <Grid ColumnSpacing="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{x:Bind Name}" />
+                        <TextBlock Grid.Column="1" Text="{x:Bind Description}" />
+                        <TextBlock Grid.Column="2" Text="{x:Bind AllGenres}" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>
 

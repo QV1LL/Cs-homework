@@ -31,10 +31,7 @@
                 Icon="View"
                 Tag="ViewPages">
                 <NavigationViewItem.MenuItems>
-                    <NavigationViewItem Content="View cities" Tag="ViewPages.ViewCitiesPage" />
-                    <NavigationViewItem Content="View games" Tag="ViewPages.ViewGamesPage" />
-                    <NavigationViewItem Content="View genres" Tag="ViewPages.ViewGenresPage" />
-                    <NavigationViewItem Content="View studios" Tag="ViewPages.ViewStudiosPage" />
+                    <NavigationViewItem Content="View games statistic" Tag="ViewPages.GamesStatisticsPage" />
                 </NavigationViewItem.MenuItems>
             </NavigationViewItem>
 

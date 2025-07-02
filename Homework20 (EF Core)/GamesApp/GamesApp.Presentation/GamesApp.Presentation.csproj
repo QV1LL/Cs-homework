@@ -11,6 +11,7 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -19,6 +20,7 @@
     <None Remove="Views\Pages\ManagePages\ManageGamesPage.xaml" />
     <None Remove="Views\Pages\ManagePages\ManageGenresPage.xaml" />
     <None Remove="Views\Pages\ManagePages\ManageStudiosPage.xaml" />
+    <None Remove="Views\Pages\ViewPages\GamesStatisticsPage.xaml" />
     <None Remove="Views\Windows\MainWindow.xaml" />
   </ItemGroup>
 
@@ -60,8 +62,9 @@
     <ProjectReference Include="..\GamesApp.Infrastructure\GamesApp.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\PageViewModels\ViewPageViewModels\" />
-    <Folder Include="Views\Pages\ViewPages\" />
+    <Page Update="Views\Pages\ViewPages\GamesStatisticsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Pages\ManagePages\ManageStudiosPage.xaml">

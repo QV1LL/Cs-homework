@@ -1,8 +1,6 @@
 ﻿using GamesApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using Windows.Networking.NetworkOperators;
 
 namespace GamesApp.Infrastructure.Persistence.Configuration;
 

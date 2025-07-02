@@ -4,6 +4,7 @@ using GamesApp.Domain.Entities;
 using GamesApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ public partial class ManageStudiosPageViewModel : ObservableObject
 {
     [ObservableProperty]
     public partial string Name { get; set; } = string.Empty;
+    public ObservableCollection<City> SelectedCities { get; set; } = new();
 
     [ObservableProperty]
     public partial bool IsErrorVisible { get; set; } = false;
@@ -30,15 +32,23 @@ public partial class ManageStudiosPageViewModel : ObservableObject
             IsStudioSelected = field != null;
 
             if (IsStudioSelected)
+            {
                 Name = field?.Name ?? string.Empty;
+                
+                SelectedCities.Clear();
+                foreach(var city in field!.Cities)
+                    SelectedCities.Add(city);
+            }
         }
     }
 
     [ObservableProperty]
     public partial bool IsStudioSelected { get; set; }
 
+    public IReadOnlyCollection<City> Cities => new ReadOnlyCollection<City>([.. _cities]);
     public ObservableCollection<Studio> Studios { get; set; } = new();
 
+    private readonly DbSet<City> _cities;
     private readonly DbSet<Studio> _studios;
     private readonly DbContext _context;
 
@@ -46,8 +56,9 @@ public partial class ManageStudiosPageViewModel : ObservableObject
     {
         _context = context;
         _studios = context.Studios;
+        _cities = context.Cities;
 
-        foreach (var s in _studios)
+        foreach (var s in _studios.Include(s => s.Cities))
             Studios.Add(s);
     }
 
@@ -59,6 +70,7 @@ public partial class ManageStudiosPageViewModel : ObservableObject
             var studio = new Studio
             {
                 Name = Name,
+                Cities = [.. SelectedCities]
             };
 
             if (await _studios
@@ -86,6 +98,7 @@ public partial class ManageStudiosPageViewModel : ObservableObject
                 throw new ArgumentNullException("No one studio is selected");
 
             SelectedStudio.Name = Name;
+            SelectedStudio.Cities = [.. SelectedCities];
 
             _studios.Update(SelectedStudio);
             await _context.SaveChangesAsync();

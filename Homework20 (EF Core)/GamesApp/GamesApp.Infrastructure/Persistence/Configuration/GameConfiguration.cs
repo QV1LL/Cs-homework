@@ -1,7 +1,6 @@
 ﻿using GamesApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace GamesApp.Infrastructure.Persistence.Configuration;
 
@@ -24,8 +23,13 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
                .IsRequired()
                .HasMaxLength(1000);
 
-        builder.Property(g => g.GameType)
-               .IsRequired();
+        builder.Property(g => g.CountOfSales)
+               .IsRequired()
+               .HasColumnName("CountOfSales");
+
+        builder.Property(g => g.Type)
+               .IsRequired()
+               .HasColumnName("GameType");
 
         builder.HasOne(g => g.Studio)
                .WithMany(s => s.Games)

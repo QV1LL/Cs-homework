@@ -29,12 +29,26 @@
                     Margin="0,0,0,20"
                     HorizontalAlignment="Left"
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Text="Manage cities" />
+                    Text="Manage studios" />
                 <TextBox
                     Width="300"
                     HorizontalAlignment="Left"
                     PlaceholderText="Enter a name"
                     Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Expander Header="Cities">
+                    <ListView
+                        x:Name="CitiesListView"
+                        ItemsSource="{x:Bind ViewModel.Cities, Mode=OneTime}"
+                        SelectionChanged="CitiesListView_SelectionChanged"
+                        SelectionMode="Multiple">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="entities:City">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Expander>
 
                 <InfoBar
                     Width="300"
@@ -49,6 +63,16 @@
                 HorizontalAlignment="Right"
                 Orientation="Horizontal"
                 Spacing="10">
+                <ContentDialog
+                    xmlns:ui="using:Microsoft.UI.Xaml.Controls"
+                    x:Name="DeleteConfirmationDialog"
+                    Title="Confirm deletion"
+                    CloseButtonText="Cancel"
+                    Content="Are you sure you want to delete this studio?"
+                    DefaultButton="Close"
+                    PrimaryButtonCommand="{x:Bind ViewModel.DeleteCommand}"
+                    PrimaryButtonText="Delete"
+                    RequestedTheme="Default" />
                 <Button
                     Command="{x:Bind ViewModel.AddCommand}"
                     Content="Add"
@@ -58,7 +82,7 @@
                     Content="Update"
                     Visibility="{x:Bind ViewModel.IsStudioSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <Button
-                    Command="{x:Bind ViewModel.DeleteCommand}"
+                    Click="DeleteButton_Click"
                     Content="Delete"
                     Visibility="{x:Bind ViewModel.IsStudioSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </StackPanel>
@@ -74,11 +98,16 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
                             FontWeight="Bold"
                             Text="Name" />
+                        <TextBlock
+                            Grid.Column="1"
+                            FontWeight="Bold"
+                            Text="Cities" />
                     </Grid>
                 </DataTemplate>
             </ListView.HeaderTemplate>
@@ -87,8 +116,10 @@
                     <Grid ColumnSpacing="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="{x:Bind Name}" />
+                        <TextBlock Grid.Column="1" Text="{x:Bind AllCities}" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

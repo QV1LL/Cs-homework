@@ -1,7 +1,9 @@
 ﻿using GamesApp.Presentation.ViewModels.PageViewModels.ManagePageViewModels;
+using GamesApp.Presentation.ViewModels.PageViewModels.ViewPageViewModels;
 using GamesApp.Presentation.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel;
 
 namespace GamesApp.Presentation;
 
@@ -13,11 +15,7 @@ public static class DependencyInjection
         services.AddTransient<ManageGamesPageViewModel>();
         services.AddTransient<ManageGenresPageViewModel>();
         services.AddTransient<ManageStudiosPageViewModel>();
-
-        //services.AddTransient<ViewCitiesPageViewModel>();
-        //services.AddTransient<ViewGamesPageViewModel>();
-        //services.AddTransient<ViewGenresPageViewModel>();
-        //services.AddTransient<ViewStudiosPageViewModel>();
+        services.AddTransient<GameStatisticsPageViewModel>();
 
         services.AddSingleton<MainWindow>();
 
