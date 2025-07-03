@@ -12,12 +12,22 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <TextBlock
+            Grid.Row="0"
+            Margin="0,0,0,20"
+            HorizontalAlignment="Left"
+            Style="{StaticResource TitleTextBlockStyle}"
+            Text="Manage games" />
+
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -25,11 +35,6 @@
                 Grid.Column="0"
                 Orientation="Vertical"
                 Spacing="7">
-                <TextBlock
-                    Margin="0,0,0,20"
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource TitleTextBlockStyle}"
-                    Text="Manage games" />
                 <TextBox
                     Width="300"
                     HorizontalAlignment="Left"
@@ -70,7 +75,20 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Expander Header="Genres">
+                <InfoBar
+                    Width="300"
+                    HorizontalAlignment="Left"
+                    IsClosable="True"
+                    IsOpen="{x:Bind ViewModel.IsErrorVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Message="{x:Bind ViewModel.ErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Severity="Error" />
+            </StackPanel>
+            <Expander
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Header="Genres">
+                <ScrollViewer MaxHeight="200">
                     <ListView
                         x:Name="GenresListView"
                         ItemsSource="{x:Bind ViewModel.Genres, Mode=OneTime}"
@@ -82,18 +100,11 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </Expander>
+                </ScrollViewer>
+            </Expander>
 
-                <InfoBar
-                    Width="300"
-                    HorizontalAlignment="Left"
-                    IsClosable="True"
-                    IsOpen="{x:Bind ViewModel.IsErrorVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Message="{x:Bind ViewModel.ErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Severity="Error" />
-            </StackPanel>
             <StackPanel
-                Grid.Column="1"
+                Grid.Column="2"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal"
                 Spacing="10">
@@ -113,9 +124,9 @@
         </Grid>
 
         <ListView
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="0,20,0,0"
-            ItemsSource="{x:Bind ViewModel.Games, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{x:Bind ViewModel.Entities, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             SelectedItem="{x:Bind ViewModel.SelectedGame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ListView.HeaderTemplate>
                 <DataTemplate>
@@ -155,6 +166,28 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <StackPanel
+            Grid.Row="3"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal"
+            Spacing="10">
+
+            <Button
+                Command="{x:Bind ViewModel.PreviousPageCommand}"
+                Content="Previous"
+                IsEnabled="{x:Bind ViewModel.CanGoPrevious, Mode=OneWay}" />
+
+            <TextBlock
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Text="{x:Bind ViewModel.CurrentPageText, Mode=OneWay}" />
+
+            <Button
+                Command="{x:Bind ViewModel.NextPageCommand}"
+                Content="Next"
+                IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}" />
+        </StackPanel>
     </Grid>
 </Page>
 

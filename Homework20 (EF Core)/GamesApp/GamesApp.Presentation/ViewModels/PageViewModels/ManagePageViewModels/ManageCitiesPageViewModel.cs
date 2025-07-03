@@ -4,13 +4,12 @@ using GamesApp.Domain.Entities;
 using GamesApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace GamesApp.Presentation.ViewModels.PageViewModels.ManagePageViewModels;
 
-public partial class ManageCitiesPageViewModel : ObservableObject
+public partial class ManageCitiesPageViewModel : PaginationViewModelBase<City>
 {
     [ObservableProperty]
     public partial string Name { get; set; } = string.Empty;
@@ -42,18 +41,11 @@ public partial class ManageCitiesPageViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsCitySelected { get; set; }
 
-    public ObservableCollection<City> Cities { get; set; } = new();
-
     private readonly DbSet<City> _cities;
-    private readonly DbContext _context;
 
-    public ManageCitiesPageViewModel(GamesAppContext context)
+    public ManageCitiesPageViewModel(GamesAppContext context) : base(context, context.Cities)
     {
-        _context = context;
         _cities = context.Cities;
-
-        foreach(var c in _cities)
-            Cities.Add(c);
     }
 
     [RelayCommand]
@@ -67,14 +59,13 @@ public partial class ManageCitiesPageViewModel : ObservableObject
                 Country = Country,
             };
 
-            if (await _cities
+            if (await EntitiesSet
                     .Where(c => c.Name == city.Name)
                     .FirstOrDefaultAsync() != null)
                 throw new ArgumentException($"City with name {city.Name} is already exist");
 
-            Cities.Add(city);
             _cities.Add(city);
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
         catch (Exception e)
         {
@@ -95,11 +86,7 @@ public partial class ManageCitiesPageViewModel : ObservableObject
             SelectedCity.Country = Country;
 
             _cities.Update(SelectedCity);
-            await _context.SaveChangesAsync();
-
-            var index = Cities.IndexOf(SelectedCity);
-            if (index >= 0 && index < Cities.Count)
-                Cities[index!] = SelectedCity;
+            await Context.SaveChangesAsync();
         }
         catch (Exception e)
         {
@@ -117,8 +104,7 @@ public partial class ManageCitiesPageViewModel : ObservableObject
                 throw new ArgumentNullException("No one city is selected");
 
             _cities.Remove(SelectedCity);
-            Cities.Remove(SelectedCity);
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
         catch (Exception e)
         {

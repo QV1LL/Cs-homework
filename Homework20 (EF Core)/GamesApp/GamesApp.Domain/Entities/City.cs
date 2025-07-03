@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GamesApp.Domain.Entities;
 
-public class City
+public class City : IEntity
 {
     public Guid? Id { get; set; }
     public string Name

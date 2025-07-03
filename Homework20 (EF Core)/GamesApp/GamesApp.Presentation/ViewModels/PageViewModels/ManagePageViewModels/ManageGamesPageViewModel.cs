@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GamesApp.Presentation.ViewModels.PageViewModels.ManagePageViewModels;
 
-public partial class ManageGamesPageViewModel : ObservableObject
+public partial class ManageGamesPageViewModel : PaginationViewModelBase<Game>
 {
     [ObservableProperty]
     public partial string Name { get; set; } = string.Empty;
@@ -47,7 +47,7 @@ public partial class ManageGamesPageViewModel : ObservableObject
                 Studio = field!.Studio;
 
                 SelectedGenres.Clear();
-                foreach(var genre in field!.Genres)
+                foreach(var genre in field!.Genres ?? [])
                     SelectedGenres.Add(genre);
             }
         }
@@ -58,22 +58,16 @@ public partial class ManageGamesPageViewModel : ObservableObject
 
     public IReadOnlyCollection<Genre> Genres => new ReadOnlyCollection<Genre>([.. _genres]);
     public IReadOnlyCollection<Studio> Studios => new ReadOnlyCollection<Studio>([.. _studios]);
-    public ObservableCollection<Game> Games { get; set; } = new();
 
-    private readonly DbSet<Game> _games;
     private readonly DbSet<Studio> _studios;
     private readonly DbSet<Genre> _genres;
-    private readonly DbContext _context;
+    private readonly DbSet<Game> _games;
 
-    public ManageGamesPageViewModel(GamesAppContext context)
+    public ManageGamesPageViewModel(GamesAppContext context) : base(context, context.Games.Include(g => g.Genres))
     {
-        _context = context;
         _genres = context.Genres;
-        _games = context.Games;
         _studios = context.Studios;
-
-        foreach (var g in _games.Include(g => g.Genres))
-            Games.Add(g);
+        _games = context.Games;
     }
 
     [RelayCommand]
@@ -91,9 +85,8 @@ public partial class ManageGamesPageViewModel : ObservableObject
                 Genres = [.. SelectedGenres]
             };
 
-            Games.Add(game);
             _games.Add(game);
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
         catch (Exception e)
         {
@@ -118,11 +111,11 @@ public partial class ManageGamesPageViewModel : ObservableObject
             SelectedGame.Genres = [.. SelectedGenres];
 
             _games.Update(SelectedGame);
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
-            var index = Games.IndexOf(SelectedGame);
-            if (index >= 0 && index < Games.Count)
-                Games[index!] = SelectedGame;
+            var index = Entities.IndexOf(SelectedGame);
+            if (index >= 0 && index < Entities.Count)
+                Entities[index!] = SelectedGame;
         }
         catch (Exception e)
         {
@@ -140,8 +133,7 @@ public partial class ManageGamesPageViewModel : ObservableObject
                 throw new ArgumentNullException("No one game is selected");
 
             _games.Remove(SelectedGame);
-            Games.Remove(SelectedGame);
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
         catch (Exception e)
         {

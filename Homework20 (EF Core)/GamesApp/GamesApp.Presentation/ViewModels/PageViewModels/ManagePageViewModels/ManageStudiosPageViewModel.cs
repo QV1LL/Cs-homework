@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GamesApp.Presentation.ViewModels.PageViewModels.ManagePageViewModels;
 
-public partial class ManageStudiosPageViewModel : ObservableObject
+public partial class ManageStudiosPageViewModel : PaginationViewModelBase<Studio>
 {
     [ObservableProperty]
     public partial string Name { get; set; } = string.Empty;
@@ -46,20 +46,14 @@ public partial class ManageStudiosPageViewModel : ObservableObject
     public partial bool IsStudioSelected { get; set; }
 
     public IReadOnlyCollection<City> Cities => new ReadOnlyCollection<City>([.. _cities]);
-    public ObservableCollection<Studio> Studios { get; set; } = new();
 
     private readonly DbSet<City> _cities;
     private readonly DbSet<Studio> _studios;
-    private readonly DbContext _context;
 
-    public ManageStudiosPageViewModel(GamesAppContext context)
+    public ManageStudiosPageViewModel(GamesAppContext context) : base(context, context.Studios.Include(s => s.Cities))
     {
-        _context = context;
         _studios = context.Studios;
         _cities = context.Cities;
-
-        foreach (var s in _studios.Include(s => s.Cities))
-            Studios.Add(s);
     }
 
     [RelayCommand]
@@ -78,9 +72,8 @@ public partial class ManageStudiosPageViewModel : ObservableObject
                     .FirstOrDefaultAsync() != null)
                 throw new ArgumentException($"Studio with name {studio.Name} is already exist");
 
-            Studios.Add(studio);
             _studios.Add(studio);
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
         catch (Exception e)
         {
@@ -101,11 +94,11 @@ public partial class ManageStudiosPageViewModel : ObservableObject
             SelectedStudio.Cities = [.. SelectedCities];
 
             _studios.Update(SelectedStudio);
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
-            var index = Studios.IndexOf(SelectedStudio);
-            if (index >= 0 && index < Studios.Count)
-                Studios[index!] = SelectedStudio;
+            var index = Entities.IndexOf(SelectedStudio);
+            if (index >= 0 && index < Entities.Count)
+                Entities[index!] = SelectedStudio;
         }
         catch (Exception e)
         {
@@ -123,8 +116,7 @@ public partial class ManageStudiosPageViewModel : ObservableObject
                 throw new ArgumentNullException("No one studio is selected");
 
             _studios.Remove(SelectedStudio);
-            Studios.Remove(SelectedStudio);
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
         catch (Exception e)
         {

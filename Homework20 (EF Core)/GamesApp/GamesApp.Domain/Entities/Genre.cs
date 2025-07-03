@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GamesApp.Domain.Entities;
 
-public class Genre
+public class Genre : IEntity
 {
     public Guid? Id { get; set; }
 

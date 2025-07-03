@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace GamesApp.Domain.Entities;
 
-public class Game
+public class Game : IEntity
 {
     public Guid? Id { get; set; }
     public string Name
