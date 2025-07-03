@@ -1,5 +1,6 @@
 ﻿using GamesApp.Infrastructure;
 using GamesApp.Infrastructure.Persistence;
+using GamesApp.Infrastructure.Services;
 using GamesApp.Presentation.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,10 +21,7 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        Task.Run(async () =>
-        {
-            await EnsureDatabaseCreatedAsync();
-        });
+        Task.Run(async () => await SeedDatabase());
     }
 
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
@@ -32,9 +30,9 @@ public partial class App : Application
         _window.Activate();
     }
 
-    private async static Task EnsureDatabaseCreatedAsync()
+    private async static Task SeedDatabase()
     {
-        await Provider.GetRequiredService<GamesAppContext>().Database.EnsureCreatedAsync();
+        await GamesAppContextSeeder.SeedAsync(Provider.GetRequiredService<GamesAppContext>());
     }
 
     private static IHostBuilder CreateHostBuilder()

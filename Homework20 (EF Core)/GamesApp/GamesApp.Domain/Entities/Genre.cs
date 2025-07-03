@@ -20,4 +20,6 @@ public class Genre
     }
 
     public List<Game> Games { get; set; }
+
+    public int GamesCount => Games.Count;
 }

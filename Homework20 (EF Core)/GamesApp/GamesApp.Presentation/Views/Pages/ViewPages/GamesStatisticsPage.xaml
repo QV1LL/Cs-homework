@@ -16,10 +16,121 @@
                 Margin="0,0,0,10"
                 FontSize="24"
                 FontWeight="Bold"
-                Text="Game Statistics" />
+                Text="Games Statistics" />
 
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
+            <Grid ColumnDefinitions="2*,5*" ColumnSpacing="20">
                 <StackPanel Spacing="10">
+                    <ComboBox
+                        Header="Choose a genre"
+                        ItemsSource="{x:Bind ViewModel.Genres, Mode=OneTime}"
+                        SelectedItem="{x:Bind ViewModel.SelectedGenre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="entities:Genre">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <ComboBox
+                        Header="Choose a game to view"
+                        ItemsSource="{x:Bind ViewModel.Games, Mode=OneTime}"
+                        SelectedItem="{x:Bind ViewModel.SelectedGame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="entities:Game">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <StackPanel Spacing="10">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            FontSize="24"
+                            Text="Game stats:" />
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock FontSize="18" Text="Description: " />
+                            <TextBlock
+                                FontSize="18"
+                                Text="{x:Bind ViewModel.SelectedGame.Description, Mode=OneWay}"
+                                TextWrapping="WrapWholeWords" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock FontSize="18" Text="Studio: " />
+                            <TextBlock FontSize="18" Text="{x:Bind ViewModel.SelectedGame.Studio.Name, Mode=OneWay}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="2">
+                            <TextBlock Text="Genres: " />
+                            <TextBlock Text="{x:Bind ViewModel.SelectedGame.AllGenres, Mode=OneWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Spacing="10">
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Top 5 Games by Sales (Genre)" />
+                            <ListView ItemsSource="{x:Bind ViewModel.Top5MostSoldGames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionMode="None">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="entities:Game">
+                                        <Grid ColumnDefinitions="*,*">
+                                            <TextBlock Text="{x:Bind Name}" />
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal"
+                                                Spacing="2">
+                                                <TextBlock Text="Sales:" />
+                                                <TextBlock Text="{x:Bind CountOfSales}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Bottom 5 Games by Sales (Genre)" />
+                            <ListView ItemsSource="{x:Bind ViewModel.Top5LeastSoldGames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionMode="None">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="entities:Game">
+                                        <Grid ColumnDefinitions="*,*">
+                                            <TextBlock Text="{x:Bind Name}" />
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal"
+                                                Spacing="2">
+                                                <TextBlock Text="Sales:" />
+                                                <TextBlock Text="{x:Bind CountOfSales}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Border>
+
                     <Border
                         Padding="10"
                         BorderBrush="Gray"
@@ -46,23 +157,10 @@
                                 Margin="0,0,0,10"
                                 FontSize="16"
                                 FontWeight="SemiBold"
-                                Text="Top-Selling Game (by genre)" />
+                                Text="Top-Selling Game (Genre)" />
                             <TextBlock Text="{x:Bind ViewModel.TopSellingGame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" />
                         </StackPanel>
                     </Border>
-                </StackPanel>
-
-                <StackPanel Grid.Column="1" Spacing="10">
-                    <ComboBox
-                        Header="Choose a genre"
-                        ItemsSource="{x:Bind ViewModel.Genres, Mode=OneTime}"
-                        SelectedItem="{x:Bind ViewModel.SelectedGenre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="entities:Genre">
-                                <TextBlock Text="{x:Bind Name}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
 
                     <Border
                         Padding="10"
@@ -74,8 +172,151 @@
                                 Margin="0,0,0,10"
                                 FontSize="16"
                                 FontWeight="SemiBold"
-                                Text="Top 5 Games by Sales (Genre)" />
-                            <ListView Height="150" ItemsSource="{x:Bind ViewModel.Top5MostSoldGames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                Text="Studios with their dominant genres" />
+                            <ListView ItemsSource="{x:Bind ViewModel.Studios, Mode=OneTime}" SelectionMode="None">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="entities:Studio">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Bind Name}" />
+                                            <TextBlock Text=": " />
+                                            <TextBlock Text="{x:Bind DominantGameGenres}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Top 3 Studios by Number of Games" />
+                            <ListView ItemsSource="{x:Bind ViewModel.Top3StudiosByGames, Mode=OneTime}" SelectionMode="None">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="entities:Studio">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Bind Name}" />
+                                            <TextBlock Text=" — " />
+                                            <TextBlock Text="{x:Bind Games.Count}" />
+                                            <TextBlock Text=" games" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Studio with Most Games" />
+                            <TextBlock Text="{x:Bind ViewModel.MostProductiveStudioText, Mode=OneTime}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Top 3 Most Popular Genres" />
+                            <ListView ItemsSource="{x:Bind ViewModel.Top3Genres, Mode=OneTime}" SelectionMode="None">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="entities:Genre">
+                                        <StackPanel Orientation="Horizontal" Spacing="2">
+                                            <TextBlock Text="{x:Bind Name}" />
+                                            <TextBlock Text="—" />
+                                            <TextBlock Text="{x:Bind GamesCount}" />
+                                            <TextBlock Text=" games" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Most Popular Genre" />
+                            <TextBlock Text="{x:Bind ViewModel.MostPopularGenreText, Mode=OneTime}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Top 3 Genres by Sales" />
+                            <ListView ItemsSource="{x:Bind ViewModel.Top3GenresBySales, Mode=OneTime}" SelectionMode="None">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="entities:Genre">
+                                        <TextBlock Text="{x:Bind Name}" />
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Most Popular Genre by Sales" />
+                            <TextBlock Text="{x:Bind ViewModel.MostPopularGenreBySales, Mode=OneWay}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Top 3 Singleplayer Games by Sales" />
+                            <ListView ItemsSource="{x:Bind ViewModel.Top3SingleplayerGames, Mode=OneTime}" SelectionMode="None">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="entities:Game">
                                         <TextBlock Text="{x:Bind Name}" />
@@ -95,34 +336,48 @@
                                 Margin="0,0,0,10"
                                 FontSize="16"
                                 FontWeight="SemiBold"
-                                Text="Bottom 5 Games by Sales (Genre)" />
-                            <ListView Height="150" ItemsSource="{x:Bind ViewModel.Top5LeastSoldGames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                Text="Top 3 Multiplayer Games by Sales" />
+                            <ListView ItemsSource="{x:Bind ViewModel.Top3MultiplayerGames, Mode=OneTime}" SelectionMode="None">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="entities:Game">
                                         <TextBlock Text="{x:Bind Name}" />
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Most Popular Singleplayer Game by Sales" />
+                            <TextBlock Text="{x:Bind ViewModel.MostPopularSingleplayerGame, Mode=OneWay}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Most Popular Multiplayer Game by Sales" />
+                            <TextBlock Text="{x:Bind ViewModel.MostPopularMultiplayerGame, Mode=OneWay}" />
                         </StackPanel>
                     </Border>
                 </StackPanel>
             </Grid>
-
-            <!-- <Border
-                Padding="10"
-                BorderBrush="Gray"
-                BorderThickness="1"
-                CornerRadius="8">
-                <StackPanel>
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Text="Detailed Game Information" />
-                    <TextBlock Text="{x:Bind ViewModel.SelectedGameInfo}" TextWrapping="Wrap" />
-                </StackPanel>
-            </Border>-->
-
         </StackPanel>
     </ScrollViewer>
 </Page>
