@@ -1,0 +1,83 @@
+﻿<Window
+    x:Class="Solution.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Number Generator"
+    Width="850"
+    Height="500">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel
+            Grid.Row="0"
+            Margin="0,0,0,10"
+            Orientation="Horizontal">
+            <StackPanel Margin="0,0,20,0">
+                <TextBlock FontWeight="Bold" Text="Prime Generator" />
+                <TextBlock Text="Min:" />
+                <TextBox x:Name="PrimeMinBox" Width="60" />
+                <TextBlock Text="Max:" />
+                <TextBox x:Name="PrimeMaxBox" Width="60" />
+                <Button
+                    x:Name="RunPrimeButton"
+                    Click="RunPrimeButton_Click"
+                    Content="Run" />
+                <Button
+                    x:Name="PausePrimeButton"
+                    Click="PausePrimeButton_Click"
+                    Content="Pause" />
+                <Button
+                    x:Name="ResumePrimeButton"
+                    Click="ResumePrimeButton_Click"
+                    Content="Resume" />
+                <Button
+                    x:Name="StopPrimeButton"
+                    Click="StopPrimeButton_Click"
+                    Content="Stop" />
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock FontWeight="Bold" Text="Fibonacci Generator" />
+                <TextBlock Text="Min:" />
+                <TextBox x:Name="FibMinBox" Width="60" />
+                <TextBlock Text="Max:" />
+                <TextBox x:Name="FibMaxBox" Width="60" />
+                <Button
+                    x:Name="RunFibButton"
+                    Click="RunFibButton_Click"
+                    Content="Run" />
+                <Button
+                    x:Name="PauseFibButton"
+                    Click="PauseFibButton_Click"
+                    Content="Pause" />
+                <Button
+                    x:Name="ResumeFibButton"
+                    Click="ResumeFibButton_Click"
+                    Content="Resume" />
+                <Button
+                    x:Name="StopFibButton"
+                    Click="StopFibButton_Click"
+                    Content="Stop" />
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ListBox
+                x:Name="PrimeList"
+                Grid.Column="0"
+                Margin="0,0,10,0" />
+            <ListBox
+                x:Name="FibList"
+                Grid.Column="1"
+                Margin="10,0,0,0" />
+        </Grid>
+    </Grid>
+</Window>
