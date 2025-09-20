@@ -1,0 +1,38 @@
+﻿<Window
+    x:Class="HorseRaces.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Horse Racing"
+    Width="800"
+    Height="500">
+    <DockPanel Margin="10">
+        <StackPanel
+            Margin="0,0,0,10"
+            DockPanel.Dock="Top"
+            Orientation="Horizontal">
+            <Button
+                x:Name="StartButton"
+                Width="120"
+                Height="35"
+                Margin="5"
+                Click="StartButton_Click"
+                Content="Start Race" />
+            <Button
+                x:Name="ResetButton"
+                Width="120"
+                Height="35"
+                Margin="5"
+                Click="ResetButton_Click"
+                Content="Reset" />
+        </StackPanel>
+
+        <StackPanel x:Name="RacePanel" DockPanel.Dock="Top" />
+
+        <TextBlock
+            Margin="0,15,0,5"
+            FontSize="16"
+            FontWeight="Bold"
+            Text="Results:" />
+        <ListBox x:Name="ResultsList" />
+    </DockPanel>
+</Window>

@@ -1,0 +1,88 @@
+﻿<Window
+    x:Class="WordFinderInDirectory.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Word Finder in Directory"
+    Width="600"
+    Height="450"
+    MinWidth="400"
+    MinHeight="300">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!--  Word  -->
+            <RowDefinition Height="Auto" />
+            <!--  Directory  -->
+            <RowDefinition Height="Auto" />
+            <!--  Show only matches  -->
+            <RowDefinition Height="Auto" />
+            <!--  Search Button  -->
+            <RowDefinition Height="*" />
+            <!--  Results  -->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Word  -->
+        <Label
+            Grid.Row="0"
+            Grid.Column="0"
+            VerticalAlignment="Center"
+            Content="Word to search:" />
+        <TextBox
+            x:Name="WordTextBox"
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,20,0,10" />
+
+        <!--  Directory  -->
+        <Label
+            Grid.Row="1"
+            Grid.Column="0"
+            VerticalAlignment="Center"
+            Content="Directory:" />
+        <TextBox
+            x:Name="DirectoryTextBox"
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,20,5,10" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="80"
+            Click="BrowseButton_Click"
+            Content="Browse..." />
+
+        <!--  Show only matches  -->
+        <CheckBox
+            x:Name="ShowOnlyMatchesCheckBox"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,0,0,10"
+            Content="Show only files with matches" />
+
+        <!--  Search Button  -->
+        <Button
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Width="100"
+            Margin="0,0,0,10"
+            HorizontalAlignment="Center"
+            Click="SearchButton_Click"
+            Content="Search" />
+
+        <!--  Results  -->
+        <ListBox
+            x:Name="ResultsList"
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch" />
+    </Grid>
+</Window>
