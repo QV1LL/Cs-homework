@@ -1,0 +1,137 @@
+﻿<Window
+    x:Class="DublicateMover.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DublicateMover"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="File Duplicate Mover"
+    Width="800"
+    Height="600"
+    mc:Ignorable="d">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label
+            Grid.Row="0"
+            Content="Шлях до директорії джерела:"
+            FontWeight="Bold" />
+
+        <StackPanel
+            Grid.Row="1"
+            Margin="0,5,0,10"
+            Orientation="Horizontal">
+            <TextBox x:Name="SourcePathTextBox" Width="600" />
+            <Button
+                x:Name="BrowseSourceButton"
+                Margin="10,0,0,0"
+                Click="BrowseSourceButton_Click"
+                Content="Обрати" />
+        </StackPanel>
+
+        <Label
+            Grid.Row="2"
+            Content="Шлях до директорії приймача:"
+            FontWeight="Bold" />
+
+        <StackPanel
+            Grid.Row="3"
+            Margin="0,5,0,10"
+            Orientation="Horizontal">
+            <TextBox x:Name="DestPathTextBox" Width="600" />
+            <Button
+                x:Name="BrowseDestButton"
+                Margin="10,0,0,0"
+                Click="BrowseDestButton_Click"
+                Content="Обрати" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="4"
+            Margin="0,0,0,10"
+            Orientation="Horizontal">
+            <Label
+                VerticalAlignment="Center"
+                Content="Вивести звіт:"
+                FontWeight="Bold" />
+            <RadioButton
+                x:Name="DisplayOnScreenRadio"
+                Margin="10,0,0,0"
+                VerticalAlignment="Center"
+                Content="На екрані"
+                IsChecked="True" />
+            <RadioButton
+                x:Name="SaveToFileRadio"
+                Margin="20,0,0,0"
+                VerticalAlignment="Center"
+                Content="У файл" />
+            <TextBox
+                x:Name="ReportFilePathTextBox"
+                Width="300"
+                Margin="10,0,0,0"
+                IsEnabled="{Binding ElementName=SaveToFileRadio, Path=IsChecked}"
+                ToolTip="Шлях до файлу звіту (наприклад, C:\report.txt)" />
+            <Button
+                x:Name="BrowseReportFileButton"
+                Margin="10,0,0,0"
+                Click="BrowseReportFileButton_Click"
+                Content="Обрати файл"
+                IsEnabled="{Binding ElementName=SaveToFileRadio, Path=IsChecked}" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="5"
+            Margin="0,0,0,10"
+            Orientation="Horizontal">
+            <Button
+                x:Name="StartButton"
+                Width="100"
+                Click="StartButton_Click"
+                Content="Запустити" />
+            <Button
+                x:Name="StopButton"
+                Width="100"
+                Margin="10,0,0,0"
+                Click="StopButton_Click"
+                Content="Зупинити"
+                IsEnabled="False" />
+            <Button
+                x:Name="RestartButton"
+                Width="100"
+                Margin="10,0,0,0"
+                Click="RestartButton_Click"
+                Content="Перезапустити"
+                IsEnabled="False" />
+        </StackPanel>
+
+        <ProgressBar
+            x:Name="ProgressBar"
+            Grid.Row="6"
+            Height="20"
+            Margin="0,0,0,10"
+            IsIndeterminate="True"
+            Visibility="Collapsed" />
+
+        <Label
+            Grid.Row="7"
+            Content="Звіт:"
+            FontWeight="Bold"
+            Visibility="{Binding ElementName=DisplayOnScreenRadio, Path=IsChecked}" />
+        <TextBox
+            x:Name="ReportTextBox"
+            Grid.Row="8"
+            IsReadOnly="True"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+            Visibility="{Binding ElementName=DisplayOnScreenRadio, Path=IsChecked}" />
+    </Grid>
+</Window>
