@@ -1,0 +1,4 @@
+﻿NAME:   Jane Miller  
+years OF EXPERIENCE: 4  
+CITY:   Los Angeles  
+SALARY EXPECTATION:   70000

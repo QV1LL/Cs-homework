@@ -1,0 +1,4 @@
+﻿Name: Michael Lee
+Years of experience: 10
+City: Seattle
+Salary expectation: 60000

@@ -1,0 +1,4 @@
+﻿Name: Tom Clark
+Years of experience: 6
+City: Miami
+Salary expectation: 50000
