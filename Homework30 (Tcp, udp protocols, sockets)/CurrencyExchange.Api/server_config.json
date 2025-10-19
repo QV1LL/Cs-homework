@@ -1,0 +1,6 @@
+﻿{
+  "Port": 62345,
+  "MaxConnectionsCount": 2,
+  "MaxUserMessageCount": 5,
+  "BanTime": 1
+}

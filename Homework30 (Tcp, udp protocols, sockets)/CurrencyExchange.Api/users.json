@@ -1,0 +1,17 @@
+﻿[
+  {
+    "Username": "admin",
+    "Password": "$2b$12$jTB5vHG7y6XjcCw/48moxuc2zygWbkDXHnuVkwbSboUw5.jFR9sg.",
+    "BannedUntil": null
+  },
+  {
+    "Username": "user1",
+    "Password": "$2b$12$B61/iBCaXw4WPjX4fXPWO.qMdRPnrf3kszX/XU3tT7jf7NNbXEr5i",
+    "BannedUntil": "2025-12-31T23:59:59Z"
+  },
+  {
+    "Username": "user2",
+    "Password": "$2b$12$QeUUpxqhf7wWeNoF3EkupeWb6eRZRYWqYjQWaPVqszxYRVP3FHec6",
+    "BannedUntil": null
+  }
+]
