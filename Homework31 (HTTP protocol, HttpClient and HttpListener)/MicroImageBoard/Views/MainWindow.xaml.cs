@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace MicroBrowser.Views;
+namespace MicroImageBoard.Views;
 
 public partial class MainWindow : Window
 {

@@ -1,9 +1,11 @@
-﻿namespace MicroBrowser.Services.SearchSystems;
+﻿using SearchResult = System.Collections.Generic.Dictionary<string, string>;
+
+namespace MicroBrowser.Services.SearchSystems;
 
 internal interface ISearchSystem
 {
     public string Name { get; }
     public bool IsEnabled { get; set; }
 
-    string GetSearchUrl(string query);
+    Task<SearchResult> GetSearchResultsAsync(string query);
 }

@@ -1,25 +1,25 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MicroBrowser.Helpers;
-using MicroBrowser.Services.SearchSystems;
+using MicroImageBoard.Helpers;
+using MicroImageBoard.Services.SearchSystems;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 
-namespace MicroBrowser.ViewModels;
+namespace MicroImageBoard.ViewModels;
 
 internal partial class MainWindowViewModel : ObservableObject
 {
     [ObservableProperty]
-    public partial ObservableCollection<ISearchSystem> SearchSystems { get; set; } = [];
+    public partial ObservableCollection<IImageSearchSystem> SearchSystems { get; set; } = [];
 
-    public ObservableCollection<SearchSystemResults> ResultsPerSystem { get; set; } = [];
-
-    [ObservableProperty]
-    public partial SearchSystemResults? SelectedSystemResults { get; set; }
+    public ObservableCollection<ImageResultsPerSystem> ImageResultsPerSystem { get; set; } = [];
 
     [ObservableProperty]
-    public partial string Query { get; set; }
+    public partial ImageResultsPerSystem? SelectedImageSystemResults { get; set; }
+
+    [ObservableProperty]
+    public partial string Query { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial bool IsSearching { get; set; }
@@ -30,23 +30,22 @@ internal partial class MainWindowViewModel : ObservableObject
         var googleSearchEngineId = Environment.GetEnvironmentVariable("GOOGLE_SEARCH_ENGINE_ID");
         var serpApi = Environment.GetEnvironmentVariable("SERP_API");
 
-        SearchSystems = new ObservableCollection<ISearchSystem>
-        {
-            new GoogleCustomSearchSystem(customSearchApi ?? string.Empty, googleSearchEngineId ?? string.Empty),
-            new SerpApiGoogleSearchSystem(serpApi ?? string.Empty),
-            new DuckDuckGoSearchSystem(),
-        };
+        SearchSystems =
+        [
+            new GoogleCustomSearchImageSystem(customSearchApi ?? string.Empty, 
+                                              googleSearchEngineId ?? string.Empty),
+            new SerpApiGoogleImageSystem(serpApi ?? string.Empty),
+        ];
 
         foreach (var system in SearchSystems)
         {
-            ResultsPerSystem.Add(new SearchSystemResults
+            ImageResultsPerSystem.Add(new ImageResultsPerSystem
             {
                 System = system,
-                Name = system.Name
             });
         }
 
-        SelectedSystemResults = ResultsPerSystem.FirstOrDefault();
+        SelectedImageSystemResults = ImageResultsPerSystem.FirstOrDefault();
     }
 
     [RelayCommand]
@@ -61,23 +60,23 @@ internal partial class MainWindowViewModel : ObservableObject
         {
             var enabledSystems = SearchSystems.Where(s => s.IsEnabled).ToList();
 
-            foreach (var result in ResultsPerSystem)
+            foreach (var result in ImageResultsPerSystem)
                 result.Results.Clear();
 
-            var searchTasks = enabledSystems.Select(async system =>
+            var searchTasks = enabledSystems.Select((Func<IImageSearchSystem, Task>)(async system =>
             {
-                var results = await system.GetSearchResultsAsync(Query);
-                var container = ResultsPerSystem.First(r => r.System == system);
+                var images = await system.GetImageUrlsAsync((string)this.Query);
+                var container = ImageResultsPerSystem.First(r => r.System == system);
 
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    foreach (var res in results)
-                        container.Results.Add(res);
+                    foreach (var img in images)
+                        container.Results.Add((string)img);
                 });
-            });
+            }));
 
-            if (SelectedSystemResults == null || !SelectedSystemResults.System.IsEnabled)
-                SelectedSystemResults = ResultsPerSystem.FirstOrDefault(r => r.System.IsEnabled);
+            if (SelectedImageSystemResults == null || !SelectedImageSystemResults.System.IsEnabled)
+                SelectedImageSystemResults = ImageResultsPerSystem.FirstOrDefault(r => r.System.IsEnabled);
 
             await Task.WhenAll(searchTasks);
         }
@@ -86,7 +85,6 @@ internal partial class MainWindowViewModel : ObservableObject
             IsSearching = false;
         }
     }
-
 
     [RelayCommand]
     private void OpenUrl(string? url)
@@ -99,7 +97,7 @@ internal partial class MainWindowViewModel : ObservableObject
         }
         catch
         {
-            Console.WriteLine($"Cannot open url: {url}");
+            Debug.WriteLine($"Cannot open URL: {url}");
         }
     }
 }

@@ -1,17 +1,25 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Web;
+using Newtonsoft.Json.Linq;
 using SearchResult = System.Collections.Generic.Dictionary<string, string>;
 
 namespace MicroBrowser.Services.SearchSystems;
 
-internal class DuckDuckGoSearchSystem : ISearchSystem
+internal class GoogleCustomSearchSystem : ISearchSystem
 {
-    public string Name => "Duck Duck Go";
+    public string Name => "Google";
     public bool IsEnabled { get; set; } = true;
 
-    private const string Endpoint = "https://api.duckduckgo.com/";
+    private readonly string _apiKey;
+    private readonly string _searchEngineId;
+    private const string Endpoint = "https://www.googleapis.com/customsearch/v1";
     private static readonly HttpClient _client = new();
+
+    public GoogleCustomSearchSystem(string apiKey, string searchEngineId)
+    {
+        _apiKey = apiKey;
+        _searchEngineId = searchEngineId;
+    }
 
     public async Task<SearchResult> GetSearchResultsAsync(string query)
     {
@@ -20,7 +28,7 @@ internal class DuckDuckGoSearchSystem : ISearchSystem
         try
         {
             string encodedQuery = HttpUtility.UrlEncode(query);
-            string url = $"{Endpoint}&q={encodedQuery}&format=json&no_html=1&skip_disambiguation=1&num=10";
+            string url = $"{Endpoint}?key={_apiKey}&cx={_searchEngineId}&q={encodedQuery}&num=10";
 
             using HttpResponseMessage response = await _client.GetAsync(url);
             response.EnsureSuccessStatusCode();
@@ -30,14 +38,14 @@ internal class DuckDuckGoSearchSystem : ISearchSystem
 
             var result = new SearchResult();
 
-            var items = results["RelatedTopics"] as JArray ?? [];
+            var items = results["items"] as JArray ?? new JArray();
             foreach (var item in items)
             {
-                var topic = item["Text"]?.ToString();
-                var link = item["FirstURL"]?.ToString();
+                var title = item["title"]?.ToString();
+                var link = item["link"]?.ToString();
 
-                if (!string.IsNullOrEmpty(topic) && !string.IsNullOrEmpty(link))
-                    result[topic] = link;
+                if (!string.IsNullOrEmpty(title) && !string.IsNullOrEmpty(link))
+                    result[title] = link;
             }
 
             return result;
