@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.JSInterop
+@using XChat.Shared.Models
+@using XChat.Shared.Services
+@page "/chat"
+@attribute [Authorize]
+@inject ChatService ChatService
+@inject AuthenticationStateProvider AuthStateProvider
+@implements IDisposable
+
+<div class="chat-container">
+    <div class="messages">
+        @foreach (var msg in messages)
+        {
+            <div class="message">
+                <strong>@msg.User:</strong> @msg.Text <small>@msg.CreatedAt.ToString("HH:mm")</small>
+            </div>
+        }
+    </div>
+    <div class="input-area">
+        <InputText @bind-Value="newMessage" placeholder="Введи повідомлення..." @onkeypress="HandleKeyPress" />
+        <button @onclick="SendMessage">Надіслати</button>
+    </div>
+</div>
+
+@code {
+    private List<Message> messages = new();
+    private string newMessage = string.Empty;
+    private string? currentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            currentUser = authState.User.Identity.Name;
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+            await ChatService.ConnectAsync(token ?? string.Empty);
+            ChatService.OnMessageReceived += OnMessageReceivedHandler;
+        }
+    }
+
+    private void OnMessageReceivedHandler(Message msg)
+    {
+        messages.Add(msg);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(newMessage) && currentUser != null)
+        {
+            var message = new Message { User = currentUser, Text = newMessage, CreatedAt = DateTime.Now };
+            await ChatService.SendMessageAsync(message);
+            newMessage = string.Empty;
+        }
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await SendMessage();
+    }
+
+    public void Dispose()
+    {
+        ChatService.OnMessageReceived -= OnMessageReceivedHandler;
+        ChatService.DisconnectAsync();
+    }
+}

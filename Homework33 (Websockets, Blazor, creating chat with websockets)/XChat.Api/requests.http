@@ -1,0 +1,8 @@
+
+POST http://localhost:62222/api/messages
+Content-Type: application/json
+
+{
+  "Text": "Hello world",
+  "UserName": "Alice"
+}
