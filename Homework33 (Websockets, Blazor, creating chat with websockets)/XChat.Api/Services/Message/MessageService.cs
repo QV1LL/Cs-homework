@@ -106,4 +106,43 @@ internal class MessageService : IMessageService
             return false;
         }
     }
+
+    public async Task<Result<IEnumerable<Models.Message>>> GetRecentAsync(int count)
+    {
+        try
+        {
+            var messages = await _context.Messages
+                .Include(m => m.User)
+                .OrderByDescending(m => m.CreatedAt)
+                .Take(count)
+                .OrderBy(m => m.CreatedAt)
+                .ToListAsync();
+
+            return Result.Ok(messages.AsEnumerable());
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Failed to get recent messages: {ex.Message}");
+        }
+    }
+
+    public async Task<Result<IEnumerable<Models.Message>>> GetOlderAsync(DateTimeOffset before, int count)
+    {
+        try
+        {
+            var messages = await _context.Messages
+                .Include(m => m.User)
+                .Where(m => m.CreatedAt < before)
+                .OrderByDescending(m => m.CreatedAt)
+                .Take(count)
+                .OrderBy(m => m.CreatedAt)
+                .ToListAsync();
+
+            return Result.Ok(messages.AsEnumerable());
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Failed to get older messages: {ex.Message}");
+        }
+    }
 }

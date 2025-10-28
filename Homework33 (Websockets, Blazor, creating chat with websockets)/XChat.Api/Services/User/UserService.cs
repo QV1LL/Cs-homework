@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.EntityFrameworkCore;
+using XChat.Api.Helpers.Hasher;
 using XChat.Api.Persistence;
 
 namespace XChat.Api.Services.User;
@@ -106,5 +107,18 @@ internal class UserService : IUserService
         {
             return false;
         }
+    }
+
+    public async Task<bool> VerifyUser(string name, string password)
+    {
+        var userResult = await GetByUsernameAsync(name);
+
+        if (userResult.IsFailed) return false;
+
+        var user = userResult.Value;
+
+        if (user.Name != name) return false;
+
+        return user.PasswordHash == PasswordHasher.Encrypt(password);
     }
 }

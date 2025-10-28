@@ -10,4 +10,5 @@ internal interface IUserService
     Task<Result<Models.User>> CreateAsync(Models.User user);
     Task<Result<Models.User>> UpdateAsync(Models.User user);
     Task<bool> DeleteAsync(Guid id);
+    Task<bool> VerifyUser(string name, string password);
 }

@@ -21,6 +21,10 @@ internal class MessageConfiguration : IEntityTypeConfiguration<Message>
                .HasForeignKey(e => e.UserId);
 
         builder.Property(e => e.CreatedAt)
-               .ValueGeneratedOnAdd();
+               .ValueGeneratedOnAdd()
+               .HasConversion(
+                  v => v.UtcDateTime,
+                  v => DateTime.SpecifyKind(v, DateTimeKind.Utc) 
+                );
     }
 }

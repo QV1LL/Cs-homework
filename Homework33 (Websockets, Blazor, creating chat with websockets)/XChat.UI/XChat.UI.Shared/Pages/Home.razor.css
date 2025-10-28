@@ -1,0 +1,157 @@
+﻿/* Existing reset and app.css styles... */
+
+/* Login-specific styles (enhanced for toggle and alerts) */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.mode-toggle {
+    display: flex;
+    margin-bottom: 20px;
+    border-radius: 25px;
+    background: #f8f9fa;
+    overflow: hidden;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: #666;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .toggle-btn.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .toggle-btn:hover {
+        background: rgba(102, 126, 234, 0.1);
+    }
+
+    .toggle-btn.active:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+.login-header h1 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.login-header p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.alert {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 0.875rem;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        font-weight: 500;
+    }
+
+.form-check {
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.form-check-input {
+    margin-top: 0.25em;
+}
+
+.form-check-label {
+    cursor: pointer;
+    color: #555;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .btn-login:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-login:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
+}
+
+.login-footer {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e5e9;
+}
+
+    .login-footer p {
+        margin: 0;
+        color: #666;
+    }
+
+    .login-footer a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+

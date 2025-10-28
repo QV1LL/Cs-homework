@@ -1,0 +1,135 @@
+﻿@page "/chat"
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@using XChat.UI.Shared.Services
+@inject XChat.UI.Shared.Services.ChatService ChatService
+@inject NavigationManager Navigation
+
+<h3 class="chat-title">XChat 💬</h3>
+
+<div class="chat-container">
+    <div class="messages-container" @ref="messagesDiv">
+        @if (ChatService.IsLoadingOlder && ChatService.Messages.Any())
+        {
+            <div class="loading-indicator">
+                <div class="spinner"></div>
+                <span>Loading older messages...</span>
+            </div>
+        }
+        @foreach (var msg in ChatService.Messages)
+        {
+            <div class="message @(msg.User == Username ? "my-message" : "other-message")">
+                <div class="message-header">@msg.User</div>
+                <div class="message-text">@msg.Text</div>
+                <div class="message-time">@msg.CreatedAt.LocalDateTime.ToString("HH:mm")</div>
+            </div>
+        }
+    </div>
+
+    <div class="input-container">
+        <input @bind="newMessage" @bind:event="oninput" @onkeydown="HandleKeyDown" placeholder="Type a message..." />
+        <button @onclick="SendMessage">Send</button>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private string? Username { get; set; }
+    private string newMessage = string.Empty;
+    private ElementReference messagesDiv;
+    private bool scrollListenerAttached;
+    private readonly int ScrollThreshold = 100;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ChatService.OnMessagesUpdated += OnMessagesUpdated;
+        await ChatService.LoadRecentMessagesAsync();
+        await ChatService.ConnectAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(100);
+            await ScrollToBottomAsync();
+            await JS.InvokeVoidAsync("attachScrollListener", messagesDiv, DotNetObjectReference.Create(this), ScrollThreshold);
+            scrollListenerAttached = true;
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnScrolledToTop()
+    {
+        if (ChatService.IsLoadingOlder || !ChatService.Messages.Any())
+            return;
+
+        await ChatService.LoadOlderMessagesAsync(ChatService.Messages.First().CreatedAt.AddTicks(-1));
+    }
+
+    private void OnMessagesUpdated()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            await JS.InvokeVoidAsync("saveScrollState", messagesDiv);
+
+            StateHasChanged();
+
+            await Task.Delay(50);
+
+            if (ChatService.IsLoadingOlder)
+            {
+                await JS.InvokeVoidAsync("restoreScrollAfterChange", messagesDiv);
+            }
+            else
+            {
+                var wasNearBottom = await JS.InvokeAsync<bool>("isNearBottom", messagesDiv, ScrollThreshold);
+                if (wasNearBottom)
+                {
+                    await ScrollToBottomAsync();
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("restoreScrollAfterChange", messagesDiv);
+                }
+            }
+        });
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(newMessage))
+            return;
+
+        await ChatService.SendMessageAsync(Username, newMessage);
+        newMessage = string.Empty;
+        var wasNearBottom = await JS.InvokeAsync<bool>("isNearBottom", messagesDiv, ScrollThreshold);
+        if (wasNearBottom)
+        {
+            await ScrollToBottomAsync();
+        }
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await SendMessage();
+    }
+
+    private async Task ScrollToBottomAsync()
+    {
+        await Task.Delay(50);
+        await JS.InvokeVoidAsync("scrollToBottom", messagesDiv);
+    }
+
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    public void Dispose()
+    {
+        ChatService.OnMessagesUpdated -= OnMessagesUpdated;
+        if (scrollListenerAttached)
+        {
+            JS.InvokeVoidAsync("detachScrollListener", messagesDiv);
+        }
+    }
+}
