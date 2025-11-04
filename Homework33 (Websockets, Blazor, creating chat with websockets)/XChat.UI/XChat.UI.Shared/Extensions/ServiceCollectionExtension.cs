@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddXChatServices(this IServiceCollection services, IConfiguration? config = null)
     {
-        var baseUrl = config?["ApiUrl"] ?? "http://192.168.1.106:62222/";
+        var baseUrl = config?["Api:Url"] ?? string.Empty;
 
         services.AddHttpClient("ApiClient", client =>
         {

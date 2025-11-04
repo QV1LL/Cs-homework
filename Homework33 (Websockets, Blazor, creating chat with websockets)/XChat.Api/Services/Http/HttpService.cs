@@ -59,6 +59,9 @@ internal class HttpService
             try
             {
                 var context = await _server.GetContextAsync();
+
+                _logger.LogInformation($"Http request from {context.Request.RemoteEndPoint}");
+
                 _ = HandleRequestAsync(context);
             }
             catch (HttpListenerException ex)

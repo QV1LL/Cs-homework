@@ -35,7 +35,7 @@ public class ChatService : IAsyncDisposable
         if (_socket.State == WebSocketState.Open)
             return;
 
-        var uri = new Uri(_configuration?["ApiWebSocketUrl"] ?? "ws://192.168.1.106:62222/ws");
+        var uri = new Uri(_configuration?["Api:WsUrl"] ?? string.Empty);
         await _socket.ConnectAsync(uri, CancellationToken.None);
 
         _ = ListenAsync();

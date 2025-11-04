@@ -1,3 +1,4 @@
+using System.Reflection;
 using XChat.UI.Shared.Extensions;
 using XChat.UI.Shared.Services;
 using XChat.UI.Web.Components;
@@ -10,11 +11,24 @@ namespace XChat.UI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddXChatServices();
-
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
+
+            var assembly = Assembly.GetAssembly(typeof(Shared._Imports));
+            var resourceName = assembly!.GetManifestResourceNames()
+                                        .Single(
+                                            n => n.EndsWith("appsettings.json"));
+            using var stream = assembly!.GetManifestResourceStream(resourceName);
+
+            var config = new ConfigurationBuilder()
+                .AddJsonStream(stream!)
+                .Build();
+
+            builder.Configuration.AddConfiguration(config);
+            builder.Services.AddSingleton<IConfiguration>(config);
+
+            builder.Services.AddXChatServices(config);
 
             var app = builder.Build();
 
