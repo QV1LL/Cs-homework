@@ -36,7 +36,7 @@ internal class AuthController
         if (createUserResult.IsFailed)
             return new Response<string>(HttpStatusCode.BadRequest, string.Join("; ", createUserResult.Errors));
 
-        var registerResponse = new AuthResponse(user.Name);
+        var registerResponse = new AuthResponse(user.Id, user.Name);
 
         return new Response<AuthResponse>(HttpStatusCode.OK, registerResponse);
     }
@@ -50,12 +50,18 @@ internal class AuthController
 
         var registerRequest = registerRequestResult.Value;
 
-        var isVerified = await _userService.VerifyUser(registerRequest.Name, registerRequest.Password);
+        var userResult = await _userService.GetByUsernameAsync(registerRequest.Name);
+
+        if (userResult.IsFailed)
+            return new Response<string>(HttpStatusCode.NotFound, string.Join("; ", "User not found", userResult.Errors));
+
+        var user = userResult.Value;
+        var isVerified = await _userService.VerifyUser(user.Name, registerRequest.Password);
 
         if (!isVerified)
             return new Response<string>(HttpStatusCode.BadRequest, "Authentication failed");
 
-        var response = new AuthResponse(registerRequest.Name);
+        var response = new AuthResponse(user.Id, user.Name);
 
         return new Response<AuthResponse>(HttpStatusCode.OK, response);
     }

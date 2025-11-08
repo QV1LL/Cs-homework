@@ -4,49 +4,74 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using XChat.UI.Shared.Dto.Message;
+using XChat.UI.Shared.Models;
 
 namespace XChat.UI.Shared.Services;
 
 public class ChatService : IAsyncDisposable
 {
-    private readonly HttpClient _http;
-    private readonly ClientWebSocket _socket = new();
+    private readonly IHttpClientFactory _httpFactory;
     private readonly IConfiguration _configuration;
     private readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
-
-    private readonly List<MessageDto> _messages = new();
-    public IReadOnlyList<MessageDto> Messages => _messages;
-
-    public bool IsLoadingOlder { get; private set; }
+    private readonly Dictionary<string, List<MessageDto>> _chatMessages = new();
+    private readonly Dictionary<string, ClientWebSocket> _sockets = new();
 
     public event Action? OnMessagesUpdated;
+    public bool IsLoadingOlder { get; private set; }
 
-    private const int PageSize = 8;
-    private const int LoadingDelayMs = 500;
+    private const int PageSize = 20;
+    private const int LoadingDelayMs = 400;
 
     public ChatService(IHttpClientFactory httpFactory, IConfiguration configuration)
     {
-        _http = httpFactory.CreateClient("ApiClient");
+        _httpFactory = httpFactory;
         _configuration = configuration;
     }
 
-    public async Task ConnectAsync()
+    public async Task<List<Room>> GetRoomsForUserAsync(Guid userId)
     {
-        if (_socket.State == WebSocketState.Open)
-            return;
-
-        var uri = new Uri(_configuration?["Api:WsUrl"] ?? string.Empty);
-        await _socket.ConnectAsync(uri, CancellationToken.None);
-
-        _ = ListenAsync();
+        var client = _httpFactory.CreateClient("ApiClient");
+        var rooms = await client.GetFromJsonAsync<List<Room>>($"api/rooms?userId={userId}");
+        return rooms ?? [];
     }
 
-    private async Task ListenAsync()
+    public async Task<Room?> CreateGroupRoomAsync(string name, Guid ownerUserId)
+    {
+        var client = _httpFactory.CreateClient("ApiClient");
+        var payload = new { Name = name, OwnerId = ownerUserId };
+        var response = await client.PostAsJsonAsync("api/rooms", payload);
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        var room = await response.Content.ReadFromJsonAsync<Room>();
+        return room;
+    }
+
+    public IReadOnlyList<MessageDto> MessagesFor(string chatId)
+        => _chatMessages.TryGetValue(chatId, out var list) ? list : [];
+
+    public async Task ConnectAsync(string? chatId)
+    {
+        if (string.IsNullOrWhiteSpace(chatId))
+            return;
+
+        if (_sockets.ContainsKey(chatId) && _sockets[chatId].State == WebSocketState.Open)
+            return;
+
+        var uri = new Uri($"{_configuration["Api:WsUrl"]}?chatId={chatId}");
+        var socket = new ClientWebSocket();
+        await socket.ConnectAsync(uri, CancellationToken.None);
+        _sockets[chatId] = socket;
+        _ = ListenAsync(chatId, socket);
+    }
+
+    private async Task ListenAsync(string chatId, ClientWebSocket socket)
     {
         var buffer = new byte[4096];
-        while (_socket.State == WebSocketState.Open)
+        while (socket.State == WebSocketState.Open)
         {
-            var result = await _socket.ReceiveAsync(buffer, CancellationToken.None);
+            var result = await socket.ReceiveAsync(buffer, CancellationToken.None);
             if (result.MessageType == WebSocketMessageType.Close)
                 break;
 
@@ -54,45 +79,62 @@ public class ChatService : IAsyncDisposable
             var message = JsonSerializer.Deserialize<MessageDto>(json, _jsonOptions);
             if (message != null)
             {
-                _messages.Add(message);
+                if (!_chatMessages.ContainsKey(chatId))
+                    _chatMessages[chatId] = new List<MessageDto>();
+
+                _chatMessages[chatId].Add(message);
                 OnMessagesUpdated?.Invoke();
             }
         }
     }
 
-    public async Task SendMessageAsync(string username, string text)
+    public async Task SendMessageAsync(string? chatId, string? username, string text)
     {
-        var request = new { UserName = username, Text = text };
-        var response = await _http.PostAsJsonAsync("/api/messages", request);
+        if (string.IsNullOrWhiteSpace(chatId) || string.IsNullOrWhiteSpace(username))
+            return;
 
+        var client = _httpFactory.CreateClient("ApiClient");
+        var payload = new { ChatId = chatId, UserName = username, Text = text };
+        var response = await client.PostAsJsonAsync("/api/messages", payload);
         if (!response.IsSuccessStatusCode)
-        {
             throw new HttpRequestException($"Failed to send message: {response.StatusCode}");
-        }
     }
 
-    public async Task LoadRecentMessagesAsync()
+    public async Task LoadMessagesAsync(string? chatId)
     {
-        var recent = await _http.GetFromJsonAsync<List<MessageDto>>($"api/messages/recent?count={PageSize}");
+        if (string.IsNullOrWhiteSpace(chatId))
+            return;
+
+        var client = _httpFactory.CreateClient("ApiClient");
+        var recent = await client.GetFromJsonAsync<List<MessageDto>>($"api/messages/recent?chatId={chatId}&count={PageSize}");
         if (recent != null)
         {
-            _messages.Clear();
-            _messages.AddRange(recent.OrderBy(m => m.CreatedAt));
+            _chatMessages[chatId] = recent.OrderBy(m => m.CreatedAt).ToList();
             OnMessagesUpdated?.Invoke();
         }
     }
 
-    public async Task LoadOlderMessagesAsync(DateTimeOffset before)
+    public async Task LoadOlderMessagesAsync(string? chatId, DateTimeOffset before)
     {
+        if (string.IsNullOrWhiteSpace(chatId))
+            return;
+
         IsLoadingOlder = true;
         try
         {
-            var older = await _http.GetFromJsonAsync<List<MessageDto>>($"api/messages/history?before={before.ToUnixTimeMilliseconds()}&count={PageSize}");
+            var client = _httpFactory.CreateClient("ApiClient");
+            var older = await client.GetFromJsonAsync<List<MessageDto>>(
+                $"api/messages/history?chatId={chatId}&before={before.ToUnixTimeMilliseconds()}&count={PageSize}");
+
             if (older?.Any() == true)
             {
-                _messages.InsertRange(0, older.OrderBy(m => m.CreatedAt));
+                if (!_chatMessages.ContainsKey(chatId))
+                    _chatMessages[chatId] = new List<MessageDto>();
+
+                _chatMessages[chatId].InsertRange(0, older.OrderBy(m => m.CreatedAt));
                 OnMessagesUpdated?.Invoke();
             }
+
             await Task.Delay(LoadingDelayMs);
         }
         finally
@@ -103,9 +145,13 @@ public class ChatService : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        if (_socket.State == WebSocketState.Open)
-            await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", CancellationToken.None);
+        foreach (var socket in _sockets.Values)
+        {
+            if (socket.State == WebSocketState.Open)
+                await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", CancellationToken.None);
+            socket.Dispose();
+        }
 
-        _socket.Dispose();
+        _sockets.Clear();
     }
 }

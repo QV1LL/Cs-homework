@@ -9,6 +9,7 @@ using XChat.Api.Helpers.Http;
 using XChat.Api.Persistence;
 using XChat.Api.Services.Http;
 using XChat.Api.Services.Message;
+using XChat.Api.Services.Room;
 using XChat.Api.Services.User;
 
 var host = Host.CreateDefaultBuilder(args)
@@ -25,9 +26,11 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddTransient<IMessageService, MessageService>();
         services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IRoomService, RoomService>();
 
         services.AddScoped<MessageController>();
         services.AddScoped<AuthController>();
+        services.AddScoped<RoomController>();
     })
     .ConfigureLogging(logging =>
     {
@@ -41,6 +44,7 @@ var httpService = host.Services.GetRequiredService<HttpService>();
 
 var messageController = host.Services.GetRequiredService<MessageController>();
 var authController = host.Services.GetRequiredService<AuthController>();
+var roomController = host.Services.GetRequiredService<RoomController>();
 
 httpService.AddHandler(HttpMethod.Post, "/api/messages", messageController.CreateMessageAsync);
 httpService.AddHandler(HttpMethod.Get, "/api/messages/history?before={time}&count={size}", messageController.GetOlderMessagesAsync);
@@ -49,14 +53,17 @@ httpService.AddHandler(HttpMethod.Get, "/api/messages/recent?count={size}", mess
 httpService.AddHandler(HttpMethod.Post, "/api/auth/register", authController.RegisterAsync);
 httpService.AddHandler(HttpMethod.Post, "/api/auth/login", authController.LoginAsync);
 
-foreach(var route in httpService.GetHandledRoutes())
+httpService.AddHandler(HttpMethod.Get, "/api/rooms?userId={userId}", roomController.GetUserRooms);
+httpService.AddHandler(HttpMethod.Post, "/api/rooms", roomController.CreateChat);
+
+foreach (var route in httpService.GetHandledRoutes())
     httpService.AddHandler(HttpMethod.Options, route, async _ =>
     {
         var response = new Response<string>(HttpStatusCode.OK);
         response.Headers.Add("Access-Control-Allow-Origin", configuration["AllowedHosts"] ?? "https://localhost:7034");
         response.Headers.Add("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
         response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
-        return response;
+        return await Task.FromResult(response);
     });
 
 _ = httpService.StartAsync();

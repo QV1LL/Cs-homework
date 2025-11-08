@@ -2,5 +2,6 @@
 
 public record AuthResponse
 (
+    Guid Id,
     string Name
 );

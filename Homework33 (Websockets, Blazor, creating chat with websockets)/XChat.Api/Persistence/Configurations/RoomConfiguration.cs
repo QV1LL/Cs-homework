@@ -23,6 +23,10 @@ internal class RoomConfiguration : IEntityTypeConfiguration<Room>
                .WithMany()
                .UsingEntity("RoomsUsers");
 
+        builder.HasMany(e => e.BannedUsers)
+               .WithMany()
+               .UsingEntity("RoomsBannedUsers");
+
         builder.HasMany(e => e.Messages)
                .WithMany()
                .UsingEntity("RoomsMessages");

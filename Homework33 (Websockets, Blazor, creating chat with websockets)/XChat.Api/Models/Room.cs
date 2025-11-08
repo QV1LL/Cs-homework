@@ -11,7 +11,7 @@ internal class Room
         get => field;
         set
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentNullException("Name cannot be null");
 
             field = value;
@@ -19,6 +19,7 @@ internal class Room
     }
     public RoomType Type { get; private set; }
     public List<User> Users { get; private set; } = [];
+    public List<User> BannedUsers { get; private set; } = [];
     public List<Message> Messages { get; private set; } = [];
 
     public Room()

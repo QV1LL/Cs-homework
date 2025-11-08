@@ -17,7 +17,7 @@ public class AuthService
         _http = httpFactory.CreateClient("ApiClient");
     }
 
-    public async Task<string?> RegisterAsync(AuthRequest user)
+    public async Task<AuthResponse?> RegisterAsync(AuthRequest user)
     {
         var request = new AuthRequest(user.Name, user.Password);
         var response = await _http.PostAsJsonAsync("api/auth/register", request);
@@ -28,8 +28,7 @@ public class AuthService
         var responseBody = await response.Content.ReadAsStringAsync();
         try
         {
-            var parsed = JsonSerializer.Deserialize<AuthResponse>(responseBody, _jsonOptions);
-            return parsed?.Name;
+            return JsonSerializer.Deserialize<AuthResponse>(responseBody, _jsonOptions);
         }
         catch
         {
@@ -37,7 +36,7 @@ public class AuthService
         }
     }
 
-    public async Task<string?> LoginAsync(AuthRequest user)
+    public async Task<AuthResponse?> LoginAsync(AuthRequest user)
     {
         var request = new AuthRequest(user.Name, user.Password);
         var response = await _http.PostAsJsonAsync("api/auth/login", request);
@@ -48,8 +47,7 @@ public class AuthService
         var responseBody = await response.Content.ReadAsStringAsync();
         try
         {
-            var parsed = JsonSerializer.Deserialize<AuthResponse>(responseBody, _jsonOptions);
-            return parsed?.Name;
+            return JsonSerializer.Deserialize<AuthResponse>(responseBody, _jsonOptions);
         }
         catch
         {

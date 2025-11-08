@@ -1,6 +1,5 @@
 using System.Reflection;
 using XChat.UI.Shared.Extensions;
-using XChat.UI.Shared.Services;
 using XChat.UI.Web.Components;
 
 namespace XChat.UI

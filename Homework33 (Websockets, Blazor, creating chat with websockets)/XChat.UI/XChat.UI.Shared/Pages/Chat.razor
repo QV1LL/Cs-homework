@@ -1,22 +1,16 @@
-﻿@page "/chat"
-@using Microsoft.AspNetCore.Components.Web
+﻿@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @using XChat.UI.Shared.Services
-@inject XChat.UI.Shared.Services.ChatService ChatService
-@inject NavigationManager Navigation
-
-<h3 class="chat-title">XChat 💬</h3>
+@inject ChatService ChatService
 
 <div class="chat-container">
     <div class="messages-container" @ref="messagesDiv">
-        @if (ChatService.IsLoadingOlder && ChatService.Messages.Any())
-        {
-            <div class="loading-indicator">
-                <div class="spinner"></div>
-                <span>Loading older messages...</span>
-            </div>
-        }
-        @foreach (var msg in ChatService.Messages)
+        <div class="loading-indicator @(ChatService.IsLoadingOlder ? "visible" : "")">
+            <div class="spinner"></div>
+            <span>Loading older messages...</span>
+        </div>
+
+        @foreach (var msg in ChatService.MessagesFor(ChatId))
         {
             <div class="message @(msg.User == Username ? "my-message" : "other-message")">
                 <div class="message-header">@msg.User</div>
@@ -33,26 +27,32 @@
 </div>
 
 @code {
-    [SupplyParameterFromQuery]
-    private string? Username { get; set; }
+    [Parameter] public string? Username { get; set; }
+    [Parameter] public string? ChatId { get; set; }
+
     private string newMessage = string.Empty;
     private ElementReference messagesDiv;
     private bool scrollListenerAttached;
     private readonly int ScrollThreshold = 100;
 
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
         ChatService.OnMessagesUpdated += OnMessagesUpdated;
-        await ChatService.LoadRecentMessagesAsync();
-        await ChatService.ConnectAsync();
+        if (!string.IsNullOrWhiteSpace(ChatId))
+        {
+            await ChatService.LoadMessagesAsync(ChatId);
+            await ChatService.ConnectAsync(ChatId);
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await Task.Delay(100);
-            await ScrollToBottomAsync();
+            await Task.Delay(50);
+            await JS.InvokeVoidAsync("scrollToBottom", messagesDiv);
             await JS.InvokeVoidAsync("attachScrollListener", messagesDiv, DotNetObjectReference.Create(this), ScrollThreshold);
             scrollListenerAttached = true;
         }
@@ -61,10 +61,11 @@
     [JSInvokable]
     public async Task OnScrolledToTop()
     {
-        if (ChatService.IsLoadingOlder || !ChatService.Messages.Any())
+        var messages = ChatService.MessagesFor(ChatId!);
+        if (ChatService.IsLoadingOlder || !messages.Any())
             return;
 
-        await ChatService.LoadOlderMessagesAsync(ChatService.Messages.First().CreatedAt.AddTicks(-1));
+        await ChatService.LoadOlderMessagesAsync(ChatId, messages[0].CreatedAt.AddTicks(-1));
     }
 
     private void OnMessagesUpdated()
@@ -72,27 +73,14 @@
         _ = InvokeAsync(async () =>
         {
             await JS.InvokeVoidAsync("saveScrollState", messagesDiv);
-
             StateHasChanged();
-
             await Task.Delay(50);
 
-            if (ChatService.IsLoadingOlder)
-            {
-                await JS.InvokeVoidAsync("restoreScrollAfterChange", messagesDiv);
-            }
+            var wasNearBottom = await JS.InvokeAsync<bool>("isNearBottom", messagesDiv, ScrollThreshold);
+            if (wasNearBottom)
+                await JS.InvokeVoidAsync("scrollToBottom", messagesDiv);
             else
-            {
-                var wasNearBottom = await JS.InvokeAsync<bool>("isNearBottom", messagesDiv, ScrollThreshold);
-                if (wasNearBottom)
-                {
-                    await ScrollToBottomAsync();
-                }
-                else
-                {
-                    await JS.InvokeVoidAsync("restoreScrollAfterChange", messagesDiv);
-                }
-            }
+                await JS.InvokeVoidAsync("restoreScrollAfterChange", messagesDiv);
         });
     }
 
@@ -101,13 +89,12 @@
         if (string.IsNullOrWhiteSpace(newMessage))
             return;
 
-        await ChatService.SendMessageAsync(Username, newMessage);
+        await ChatService.SendMessageAsync(ChatId, Username, newMessage);
         newMessage = string.Empty;
+
         var wasNearBottom = await JS.InvokeAsync<bool>("isNearBottom", messagesDiv, ScrollThreshold);
         if (wasNearBottom)
-        {
-            await ScrollToBottomAsync();
-        }
+            await JS.InvokeVoidAsync("scrollToBottom", messagesDiv);
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs e)
@@ -116,20 +103,10 @@
             await SendMessage();
     }
 
-    private async Task ScrollToBottomAsync()
-    {
-        await Task.Delay(50);
-        await JS.InvokeVoidAsync("scrollToBottom", messagesDiv);
-    }
-
-    [Inject] private IJSRuntime JS { get; set; } = default!;
-
     public void Dispose()
     {
         ChatService.OnMessagesUpdated -= OnMessagesUpdated;
         if (scrollListenerAttached)
-        {
             JS.InvokeVoidAsync("detachScrollListener", messagesDiv);
-        }
     }
 }

@@ -7,6 +7,7 @@ internal class XChatContext(DbContextOptions<XChatContext> options) : DbContext(
 {
     public DbSet<Message> Messages => Set<Message>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<Room> Rooms => Set<Room>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

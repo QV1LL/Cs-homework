@@ -92,13 +92,16 @@
         {
             var request = new AuthRequest(authModel.Name, authModel.Password);
 
-            string? result = isLogin
+            AuthResponse? result = isLogin
                 ? await AuthService.LoginAsync(request)
                 : await AuthService.RegisterAsync(request);
 
+            UserStateService.Username = result?.Name;
+            UserStateService.UserId = result?.Id;
+
             if (result != null)
             {
-                NavigationManager.NavigateTo($"/chat?Username={result}");
+                NavigationManager.NavigateTo($"/chat");
             }
             else
             {

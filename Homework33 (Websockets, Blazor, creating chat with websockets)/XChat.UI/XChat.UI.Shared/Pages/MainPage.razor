@@ -1,0 +1,82 @@
+﻿@page "/chat"
+@using XChat.UI.Shared.Models
+@using XChat.UI.Shared.Services
+@inject ChatService ChatService
+@inject NavigationManager Navigation
+
+<div class="main-chat-layout">
+    <div class="sidebar">
+        <h3 class="sidebar-title">Chats</h3>
+
+        <div class="new-chat-container">
+            <input placeholder="New chat name..." @bind="newChatName" @bind:event="oninput" />
+            <button @onclick="CreateGroupChat" disabled="@string.IsNullOrWhiteSpace(newChatName)">➕</button>
+        </div>
+
+        <div class="chat-list">
+            @if (rooms == null)
+            {
+                <div class="loading">Loading...</div>
+            }
+            else if (rooms.Count == 0)
+            {
+                <div class="no-chat">No chats available</div>
+            }
+            else
+            {
+                @foreach (var chat in rooms)
+                {
+                    <div class="chat-item @(SelectedChatId == chat.Id.ToString() ? "active" : "")"
+                         @onclick="@(() => OpenChat(chat.Id.ToString()))">
+                        <div class="chat-name">@chat.Name</div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="chat-area">
+        @if (SelectedChatId is not null)
+        {
+            <Chat Username="@Username" ChatId="@SelectedChatId" />
+        }
+        else
+        {
+            <div class="no-chat">Select a chat to start messaging 💬</div>
+        }
+    </div>
+</div>
+
+@code {
+    private string? Username = UserStateService.Username;
+    private Guid UserId = UserStateService.UserId ?? Guid.Empty;
+    private string? SelectedChatId;
+    private List<Room>? rooms;
+    private string newChatName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        rooms = await ChatService.GetRoomsForUserAsync(UserId);
+    }
+
+    private void OpenChat(string chatId)
+    {
+        SelectedChatId = chatId;
+    }
+
+    private async Task CreateGroupChat()
+    {
+        if (string.IsNullOrWhiteSpace(newChatName))
+            return;
+
+        var newRoom = await ChatService.CreateGroupRoomAsync(newChatName, UserId);
+        if (newRoom != null)
+        {
+            rooms ??= new List<Room>();
+            rooms.Add(newRoom);
+            SelectedChatId = newRoom.Id.ToString();
+            newChatName = string.Empty;
+            StateHasChanged();
+        }
+    }
+}
