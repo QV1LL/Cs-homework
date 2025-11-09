@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using XChat.Api.Persistence;
@@ -11,9 +12,11 @@ using XChat.Api.Persistence;
 namespace XChat.Api.Migrations
 {
     [DbContext(typeof(XChatContext))]
-    partial class XChatContextModelSnapshot : ModelSnapshot
+    [Migration("20251109085240_AddRoomToMessageModel")]
+    partial class AddRoomToMessageModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

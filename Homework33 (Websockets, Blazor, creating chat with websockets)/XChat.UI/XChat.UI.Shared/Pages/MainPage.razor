@@ -1,16 +1,22 @@
 ﻿@page "/chat"
+@using XChat.UI.Shared.Components
 @using XChat.UI.Shared.Models
 @using XChat.UI.Shared.Services
+@using XChat.UI.Shared.Enums
 @inject ChatService ChatService
-@inject NavigationManager Navigation
 
 <div class="main-chat-layout">
     <div class="sidebar">
         <h3 class="sidebar-title">Chats</h3>
 
         <div class="new-chat-container">
-            <input placeholder="New chat name..." @bind="newChatName" @bind:event="oninput" />
+            <input placeholder="New group name..." @bind="newChatName" @bind:event="oninput" />
             <button @onclick="CreateGroupChat" disabled="@string.IsNullOrWhiteSpace(newChatName)">➕</button>
+        </div>
+
+        <div class="new-chat-container personal">
+            <input placeholder="Start chat with username..." @bind="personalUsername" @bind:event="oninput" />
+            <button @onclick="CreatePersonalChat" disabled="@string.IsNullOrWhiteSpace(personalUsername)">💬</button>
         </div>
 
         <div class="chat-list">
@@ -26,9 +32,19 @@
             {
                 @foreach (var chat in rooms)
                 {
-                    <div class="chat-item @(SelectedChatId == chat.Id.ToString() ? "active" : "")"
-                         @onclick="@(() => OpenChat(chat.Id.ToString()))">
-                        <div class="chat-name">@chat.Name</div>
+                    <div class="chat-item @(SelectedChat?.Id == chat.Id ? "active" : "")"
+                         @onclick="@(() => OpenChat(chat))">
+                        <div class="chat-name">
+                            @chat.Name
+                            @if (chat.Type == RoomType.Personal)
+                            {
+                                <span class="chat-type personal">👤</span>
+                            }
+                            else
+                            {
+                                <span class="chat-type group">👥</span>
+                            }
+                        </div>
                     </div>
                 }
             }
@@ -36,32 +52,58 @@
     </div>
 
     <div class="chat-area">
-        @if (SelectedChatId is not null)
+        @if (SelectedChat != null)
         {
-            <Chat Username="@Username" ChatId="@SelectedChatId" />
+            <Chat Username="@Username" ChatId="@SelectedChat.Id.ToString()" />
         }
         else
         {
             <div class="no-chat">Select a chat to start messaging 💬</div>
         }
     </div>
+
+    @if (SelectedChat?.Type == RoomType.Group)
+    {
+        <div class="users-panel">
+            <h3>Add user to chat</h3>
+            <input placeholder="Enter username..." @bind="usernameToAdd" @bind:event="oninput" />
+            <button @onclick="AddUserToChat" disabled="@string.IsNullOrWhiteSpace(usernameToAdd)">Add</button>
+
+            @if (addUserStatus is not null)
+            {
+                <div class="status">@addUserStatus</div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="users-panel">
+            <div class="no-chat">Personal chat 👤 (no user management)</div>
+        </div>
+    }
 </div>
 
 @code {
     private string? Username = UserStateService.Username;
     private Guid UserId = UserStateService.UserId ?? Guid.Empty;
-    private string? SelectedChatId;
+
     private List<Room>? rooms;
+    private Room? SelectedChat;
+
     private string newChatName = string.Empty;
+    private string personalUsername = string.Empty;
+    private string usernameToAdd = string.Empty;
+    private string? addUserStatus;
 
     protected override async Task OnInitializedAsync()
     {
         rooms = await ChatService.GetRoomsForUserAsync(UserId);
     }
 
-    private void OpenChat(string chatId)
+    private void OpenChat(Room chat)
     {
-        SelectedChatId = chatId;
+        SelectedChat = chat;
+        addUserStatus = null;
     }
 
     private async Task CreateGroupChat()
@@ -74,9 +116,42 @@
         {
             rooms ??= new List<Room>();
             rooms.Add(newRoom);
-            SelectedChatId = newRoom.Id.ToString();
+            SelectedChat = newRoom;
             newChatName = string.Empty;
             StateHasChanged();
         }
+    }
+
+    private async Task CreatePersonalChat()
+    {
+        if (string.IsNullOrWhiteSpace(personalUsername))
+            return;
+
+        var room = await ChatService.CreatePersonalRoomAsync(Username!, personalUsername);
+        if (room != null)
+        {
+            rooms ??= new List<Room>();
+            if (!rooms.Any(r => r.Id == room.Id))
+                rooms.Add(room);
+
+            SelectedChat = room;
+            personalUsername = string.Empty;
+            StateHasChanged();
+        }
+        else
+        {
+            addUserStatus = $"❌ Failed to create personal chat with {personalUsername}";
+        }
+    }
+
+    private async Task AddUserToChat()
+    {
+        if (SelectedChat == null || SelectedChat.Type != RoomType.Group || string.IsNullOrWhiteSpace(usernameToAdd))
+            return;
+
+        var result = await ChatService.AddUserToRoomAsync(SelectedChat.Id, usernameToAdd);
+        addUserStatus = result ? $"✅ {usernameToAdd} added" : $"❌ Failed to add {usernameToAdd}";
+        usernameToAdd = string.Empty;
+        StateHasChanged();
     }
 }

@@ -144,8 +144,25 @@ internal class HttpService
     {
         try
         {
-            var webSocketContext = await context.AcceptWebSocketAsync(null);
-            _webSocketService.AddClientAsync(webSocketContext.WebSocket);
+            var request = context.Request;
+            var query = System.Web.HttpUtility.ParseQueryString(request.Url.Query);
+            var chatIdParam = query["chatId"];
+
+            if (!Guid.TryParse(chatIdParam, out var chatId))
+            {
+                _logger.LogWarning("Invalid or missing chatId in WebSocket request");
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.OutputStream.WriteAsync(
+                    System.Text.Encoding.UTF8.GetBytes("Missing or invalid chatId")
+                );
+                context.Response.Close();
+                return;
+            }
+
+            var wsContext = await context.AcceptWebSocketAsync(null);
+            _webSocketService.AddClient(chatId, wsContext.WebSocket);
+
+            _logger.LogInformation("WebSocket connected to room {ChatId}", chatId);
         }
         catch (Exception ex)
         {

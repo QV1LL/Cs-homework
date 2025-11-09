@@ -131,4 +131,33 @@ internal class RoomService : IRoomService
             return false;
         }
     }
+
+    public async Task<Result> AddUserToRoom(Models.Room room, Models.User user)
+    {
+        try
+        {
+            var existingRoom = await _context.Rooms
+                .Include(r => r.Users)
+                .FirstOrDefaultAsync(r => r.Id == room.Id);
+
+            if (existingRoom == null)
+                return Result.Fail("Room not found");
+
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
+            if (existingUser == null)
+                return Result.Fail("User not found");
+
+            if (existingRoom.Users.Any(u => u.Id == existingUser.Id))
+                return Result.Fail("User already in room");
+
+            existingRoom.Users.Add(existingUser);
+            await _context.SaveChangesAsync();
+            return Result.Ok();
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Failed to add user to room: {ex.Message}");
+        }
+    }
+
 }

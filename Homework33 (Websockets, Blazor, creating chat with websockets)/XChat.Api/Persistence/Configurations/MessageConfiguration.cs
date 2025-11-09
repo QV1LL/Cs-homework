@@ -20,6 +20,10 @@ internal class MessageConfiguration : IEntityTypeConfiguration<Message>
                .WithMany(e => e.Messages)
                .HasForeignKey(e => e.UserId);
 
+        builder.HasOne(e => e.Room)
+               .WithMany(e => e.Messages)
+               .HasForeignKey(e => e.RoomId);
+
         builder.Property(e => e.CreatedAt)
                .ValueGeneratedOnAdd()
                .HasConversion(

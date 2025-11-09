@@ -10,4 +10,6 @@ internal interface IRoomService
     Task<Result<Models.Room>> CreateAsync(Models.Room room);
     Task<Result<Models.Room>> UpdateAsync(Models.Room room);
     Task<bool> DeleteAsync(Guid id);
+
+    Task<Result> AddUserToRoom(Models.Room room, Models.User user);
 }

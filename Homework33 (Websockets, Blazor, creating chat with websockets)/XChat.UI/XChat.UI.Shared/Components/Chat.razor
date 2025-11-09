@@ -47,6 +47,20 @@
         }
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        _ = base.OnParametersSetAsync();
+
+        if (!string.IsNullOrWhiteSpace(ChatId))
+        {
+            await ChatService.DisposeAsync();
+            await ChatService.LoadMessagesAsync(ChatId);
+            await ChatService.ConnectAsync(ChatId);
+
+            await JS.InvokeVoidAsync("scrollToBottom", messagesDiv);
+        }
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

@@ -23,6 +23,7 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddSingleton<HttpService>();
         services.AddSingleton<WebSocketService>();
+        services.AddSingleton<WordsService>();
 
         services.AddTransient<IMessageService, MessageService>();
         services.AddTransient<IUserService, UserService>();
@@ -46,15 +47,17 @@ var messageController = host.Services.GetRequiredService<MessageController>();
 var authController = host.Services.GetRequiredService<AuthController>();
 var roomController = host.Services.GetRequiredService<RoomController>();
 
-httpService.AddHandler(HttpMethod.Post, "/api/messages", messageController.CreateMessageAsync);
-httpService.AddHandler(HttpMethod.Get, "/api/messages/history?before={time}&count={size}", messageController.GetOlderMessagesAsync);
-httpService.AddHandler(HttpMethod.Get, "/api/messages/recent?count={size}", messageController.GetRecentMessagesAsync);
+httpService.AddHandler(HttpMethod.Post, "/api/messages?chatId={chatId}", messageController.CreateMessageAsync);
+httpService.AddHandler(HttpMethod.Get, "/api/messages/history?chatId={chatId}&before={time}&count={size}", messageController.GetOlderMessagesAsync);
+httpService.AddHandler(HttpMethod.Get, "/api/messages/recent?chatId={chatId}&count={size}", messageController.GetRecentMessagesAsync);
 
 httpService.AddHandler(HttpMethod.Post, "/api/auth/register", authController.RegisterAsync);
 httpService.AddHandler(HttpMethod.Post, "/api/auth/login", authController.LoginAsync);
 
 httpService.AddHandler(HttpMethod.Get, "/api/rooms?userId={userId}", roomController.GetUserRooms);
+httpService.AddHandler(HttpMethod.Post, "/api/rooms/add-user?roomId={roomId}", roomController.AddUserToChat);
 httpService.AddHandler(HttpMethod.Post, "/api/rooms", roomController.CreateChat);
+httpService.AddHandler(HttpMethod.Post, "/api/rooms/personal", roomController.CreatePersonalChat);
 
 foreach (var route in httpService.GetHandledRoutes())
     httpService.AddHandler(HttpMethod.Options, route, async _ =>

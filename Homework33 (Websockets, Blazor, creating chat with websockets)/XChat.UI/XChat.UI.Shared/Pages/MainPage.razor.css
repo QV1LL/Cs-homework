@@ -2,21 +2,73 @@
     display: flex;
     height: 100vh;
     overflow: hidden;
+    background-color: #121212;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+/* Sidebar */
 .sidebar {
     width: 280px;
     background-color: #1f1f1f;
     color: #fff;
     display: flex;
     flex-direction: column;
+    border-right: 1px solid #2a2a2a;
 }
 
 .sidebar-title {
     padding: 16px;
     font-size: 1.2rem;
-    border-bottom: 1px solid #333;
+    font-weight: 600;
+    border-bottom: 1px solid #2a2a2a;
 }
+
+.new-chat-container {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 8px;
+    border-bottom: 1px solid #2a2a2a;
+    background-color: #252525;
+}
+
+    .new-chat-container input {
+        flex: 1;
+        padding: 8px 10px;
+        border: 1px solid #333;
+        border-radius: 6px;
+        background-color: #2a2a2a;
+        color: #fff;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .new-chat-container input:focus {
+            border-color: #0078d7;
+            box-shadow: 0 0 4px rgba(0, 120, 215, 0.3);
+        }
+
+    .new-chat-container button {
+        padding: 8px 10px;
+        border: none;
+        border-radius: 6px;
+        background-color: #0078d7;
+        color: #fff;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+        .new-chat-container button:hover:not(:disabled) {
+            background-color: #005fa3;
+        }
+
+        .new-chat-container button:disabled {
+            background-color: #444;
+            cursor: not-allowed;
+        }
 
 .chat-list {
     flex: 1;
@@ -40,22 +92,125 @@
 
 .chat-name {
     font-weight: 600;
+    font-size: 1rem;
+    color: #fff;
 }
 
-.chat-last {
-    font-size: 0.9rem;
-    opacity: 0.8;
+.no-chat,
+.loading {
+    text-align: center;
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 0.95rem;
 }
 
+/* Chat area */
 .chat-area {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #f9f9f9;
+    background-color: #f9f9f9;
+    color: #000;
 }
 
-.no-chat {
-    margin: auto;
-    font-size: 1.1rem;
-    color: #888;
+/* Users panel */
+.users-panel {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 20px;
+    border-left: 1px solid #2a2a2a;
+    background-color: #1f1f1f;
+    box-sizing: border-box;
+    color: #fff;
+}
+
+    .users-panel h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #fff;
+    }
+
+    .users-panel input {
+        padding: 10px 12px;
+        border: 1px solid #333;
+        border-radius: 8px;
+        background-color: #2a2a2a;
+        color: #fff;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+        .users-panel input:focus {
+            border-color: #0078d7;
+            box-shadow: 0 0 4px rgba(0, 120, 215, 0.3);
+        }
+
+    .users-panel button {
+        margin-top: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        background-color: #0078d7;
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+        .users-panel button:hover:not(:disabled) {
+            background-color: #005fa3;
+        }
+
+        .users-panel button:disabled {
+            background-color: #444;
+            cursor: not-allowed;
+        }
+
+    .users-panel .status {
+        margin-top: 12px;
+        padding: 8px 10px;
+        background-color: #2a2a2a;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #bbb;
+        text-align: center;
+    }
+
+    .users-panel .no-chat {
+        font-size: 1rem;
+        color: #aaa;
+        text-align: center;
+        margin-top: 40%;
+    }
+
+/* Scrollbar */
+.chat-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 4px;
+}
+
+    .chat-list::-webkit-scrollbar-thumb:hover {
+        background-color: #666;
+    }
+
+.new-chat-container.personal {
+    margin-top: 8px;
+    border-top: 1px solid #333;
+    padding-top: 10px;
+}
+
+.chat-type {
+    margin-left: 8px;
+    font-size: 0.9rem;
+    opacity: 0.7;
 }

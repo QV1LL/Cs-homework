@@ -28,7 +28,7 @@ internal class RoomConfiguration : IEntityTypeConfiguration<Room>
                .UsingEntity("RoomsBannedUsers");
 
         builder.HasMany(e => e.Messages)
-               .WithMany()
-               .UsingEntity("RoomsMessages");
+               .WithOne(e => e.Room)
+               .HasForeignKey(e => e.RoomId);
     }
 }

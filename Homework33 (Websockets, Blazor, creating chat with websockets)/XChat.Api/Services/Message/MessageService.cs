@@ -1,16 +1,19 @@
 ﻿using FluentResults;
 using Microsoft.EntityFrameworkCore;
 using XChat.Api.Persistence;
+using XChat.Api.Services.Room;
 
 namespace XChat.Api.Services.Message;
 
 internal class MessageService : IMessageService
 {
+    private readonly IRoomService _roomService;
     private readonly XChatContext _context;
 
-    public MessageService(XChatContext context)
+    public MessageService(XChatContext context, IRoomService roomService)
     {
         _context = context;
+        _roomService = roomService;
     }
 
     public async Task<Result<IEnumerable<Models.Message>>> GetAllAsync()
@@ -57,12 +60,20 @@ internal class MessageService : IMessageService
         }
     }
 
-    public async Task<Result<Models.Message>> CreateAsync(Models.Message message)
+    public async Task<Result<Models.Message>> CreateAsync(Models.Message message, Guid chatId)
     {
         try
         {
+            var roomResult = await _roomService.GetByIdAsync(chatId);
+
+            if (roomResult.IsFailed) return roomResult.ToResult();
+
+            var room = roomResult.Value;
+
+            room.Messages.Add(message);
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
+
             return Result.Ok(message);
         }
         catch (Exception ex)
@@ -107,12 +118,14 @@ internal class MessageService : IMessageService
         }
     }
 
-    public async Task<Result<IEnumerable<Models.Message>>> GetRecentAsync(int count)
+    public async Task<Result<IEnumerable<Models.Message>>> GetRecentAsync(int count, Guid chatId)
     {
         try
         {
             var messages = await _context.Messages
                 .Include(m => m.User)
+                .Include(m => m.Room)
+                .Where(m => m.RoomId == chatId)
                 .OrderByDescending(m => m.CreatedAt)
                 .Take(count)
                 .OrderBy(m => m.CreatedAt)
@@ -126,13 +139,14 @@ internal class MessageService : IMessageService
         }
     }
 
-    public async Task<Result<IEnumerable<Models.Message>>> GetOlderAsync(DateTimeOffset before, int count)
+    public async Task<Result<IEnumerable<Models.Message>>> GetOlderAsync(DateTimeOffset before, int count, Guid chatId)
     {
         try
         {
             var messages = await _context.Messages
                 .Include(m => m.User)
-                .Where(m => m.CreatedAt < before)
+                .Include(m => m.Room)
+                .Where(m => m.CreatedAt < before && m.RoomId == chatId)
                 .OrderByDescending(m => m.CreatedAt)
                 .Take(count)
                 .OrderBy(m => m.CreatedAt)
